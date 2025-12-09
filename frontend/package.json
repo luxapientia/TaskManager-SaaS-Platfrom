@@ -36,7 +36,7 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\"",
     "type-check": "tsc --noEmit",
-    "test:staged": "react-scripts test --findRelatedTests --passWithNoTests --watchAll=false"
+    "test:staged": "react-scripts test --passWithNoTests --watchAll=false"
   },
   "eslintConfig": {
     "extends": [
