@@ -4,7 +4,7 @@ const logger = require('../utils/logger');
 if (!process.env.DATABASE_URL) {
   throw new Error(
     'DATABASE_URL environment variable is not set. ' +
-    'Please set it in your .env file or environment.'
+      'Please set it in your .env file or environment.'
   );
 }
 

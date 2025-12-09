@@ -6,7 +6,7 @@ describe('User Model Error Handling', () => {
     test('should handle database errors in create', async () => {
       // Create a user with a duplicate email to trigger a unique constraint error
       const email = `duplicate-error-${Date.now()}@example.com`;
-      
+
       // Create first user
       await User.create({
         email,
@@ -32,7 +32,9 @@ describe('User Model Error Handling', () => {
       const mockError = new Error('Database connection failed');
       pool.query = jest.fn().mockRejectedValue(mockError);
 
-      await expect(User.findByEmail('test@example.com')).rejects.toThrow('Database connection failed');
+      await expect(User.findByEmail('test@example.com')).rejects.toThrow(
+        'Database connection failed'
+      );
 
       // Restore original immediately
       pool.query = originalQuery;
@@ -46,11 +48,12 @@ describe('User Model Error Handling', () => {
       const mockError = new Error('Database connection failed');
       pool.query = jest.fn().mockRejectedValue(mockError);
 
-      await expect(User.findById('123')).rejects.toThrow('Database connection failed');
+      await expect(User.findById('123')).rejects.toThrow(
+        'Database connection failed'
+      );
 
       // Restore original immediately
       pool.query = originalQuery;
     });
   });
 });
-

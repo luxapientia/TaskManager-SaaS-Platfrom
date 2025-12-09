@@ -30,11 +30,10 @@ describe('Redis Connection Events', () => {
     // Since we can't easily test the actual redis.js module's catch block,
     // we'll verify the error handler is set up correctly
     const testError = new Error('Failed to connect to Redis');
-    
+
     // The catch handler calls logger.error with the error
     // We can verify this by checking the error handler is registered
     redisClient.emit('error', testError);
     expect(logger.error).toHaveBeenCalled();
   });
 });
-

@@ -34,11 +34,11 @@ describe('User Model', () => {
       let user = null;
       let retries = 0;
       while (!user && retries < 5) {
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
         user = await User.findByEmail(email);
         retries++;
       }
-      
+
       expect(user).not.toBeNull();
       expect(user).toBeDefined();
       expect(user.email).toBe(email);
@@ -60,10 +60,10 @@ describe('User Model', () => {
       });
 
       expect(createdUser.id).toBeDefined();
-      
+
       // Small delay to ensure database commit
-      await new Promise(resolve => setTimeout(resolve, 10));
-      
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
       const user = await User.findById(createdUser.id);
       expect(user).not.toBeNull();
       expect(user).toBeDefined();
@@ -91,11 +91,11 @@ describe('User Model', () => {
       let user = await User.findByEmail(email);
       let retries = 0;
       while (!user && retries < 5) {
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
         user = await User.findByEmail(email);
         retries++;
       }
-      
+
       expect(user).not.toBeNull();
       expect(user.email).toBe(email);
       const isValid = await user.validatePassword('Test1234');
@@ -114,11 +114,11 @@ describe('User Model', () => {
       let user = await User.findByEmail(email);
       let retries = 0;
       while (!user && retries < 5) {
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
         user = await User.findByEmail(email);
         retries++;
       }
-      
+
       expect(user).not.toBeNull();
       expect(user.email).toBe(email);
       const isValid = await user.validatePassword('WrongPassword');
@@ -143,4 +143,3 @@ describe('User Model', () => {
     });
   });
 });
-

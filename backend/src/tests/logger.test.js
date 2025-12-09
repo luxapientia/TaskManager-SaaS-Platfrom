@@ -14,10 +14,10 @@ describe('Logger Configuration', () => {
   test('should add file transports in production', () => {
     // Set production environment
     process.env.NODE_ENV = 'production';
-    
+
     // Clear cache and reload
     delete require.cache[require.resolve('../utils/logger')];
-    
+
     // Create logger manually to test production behavior (lines 22-26)
     const winston = require('winston');
     const testLogger = winston.createLogger({
@@ -44,13 +44,13 @@ describe('Logger Configuration', () => {
       new winston.transports.File({ filename: 'error.log', level: 'error' })
     );
     testLogger.add(new winston.transports.File({ filename: 'combined.log' }));
-    
+
     expect(testLogger).toBeDefined();
     expect(testLogger.transports).toBeDefined();
-    
+
     // Check that file transports are added
     const fileTransports = testLogger.transports.filter(
-      transport => transport.constructor.name === 'File'
+      (transport) => transport.constructor.name === 'File'
     );
     expect(fileTransports.length).toBe(2); // error.log and combined.log
   });
@@ -59,13 +59,12 @@ describe('Logger Configuration', () => {
     process.env.NODE_ENV = 'test';
     delete require.cache[require.resolve('../utils/logger')];
     const logger = require('../utils/logger');
-    
+
     expect(logger).toBeDefined();
     // In test, only console transport should exist (no file transports)
     const hasFileTransport = logger.transports.some(
-      transport => transport.constructor.name === 'File'
+      (transport) => transport.constructor.name === 'File'
     );
     expect(hasFileTransport).toBe(false);
   });
 });
-

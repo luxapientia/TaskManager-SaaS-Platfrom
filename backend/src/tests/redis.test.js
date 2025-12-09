@@ -14,5 +14,3 @@ describe('Redis Configuration', () => {
     expect(redisClient).toBeDefined();
   });
 });
-
-

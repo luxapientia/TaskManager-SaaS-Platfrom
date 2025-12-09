@@ -19,26 +19,28 @@ describe('Database Error Handling', () => {
   test('should throw error when DATABASE_URL is not set', () => {
     // Save original
     const savedUrl = process.env.DATABASE_URL;
-    
+
     // Remove DATABASE_URL
     delete process.env.DATABASE_URL;
-    
+
     // Clear cache to force re-evaluation
     delete require.cache[require.resolve('../config/database')];
-    
+
     // The check happens at module load, so we need to test it directly
     // Since DATABASE_URL is set in jest.setup.js, this test verifies the check exists
     // We can't easily test it without bypassing jest.setup.js, so we'll test the pool error instead
     // Restore for other tests
     process.env.DATABASE_URL = savedUrl;
-    
+
     // This test verifies the structure exists in the code
     expect(true).toBe(true);
   });
 
   test('should handle pool error event', () => {
     // Get the pool instance
-    process.env.DATABASE_URL = originalDatabaseUrl || 'postgresql://dev:dev123@localhost:5450/taskmanager';
+    process.env.DATABASE_URL =
+      originalDatabaseUrl ||
+      'postgresql://dev:dev123@localhost:5450/taskmanager';
     delete require.cache[require.resolve('../config/database')];
     const pool = require('../config/database');
 
@@ -53,7 +55,10 @@ describe('Database Error Handling', () => {
     const testError = new Error('Pool error');
     pool.emit('error', testError);
 
-    expect(logger.error).toHaveBeenCalledWith('Unexpected error on idle client', testError);
+    expect(logger.error).toHaveBeenCalledWith(
+      'Unexpected error on idle client',
+      testError
+    );
     expect(process.exit).toHaveBeenCalledWith(-1);
 
     // Restore
@@ -61,4 +66,3 @@ describe('Database Error Handling', () => {
     jest.restoreAllMocks();
   });
 });
-

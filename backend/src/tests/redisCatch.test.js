@@ -22,4 +22,3 @@ describe('Redis Catch Handler', () => {
     );
   });
 });
-

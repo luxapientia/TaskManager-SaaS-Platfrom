@@ -1,6 +1,10 @@
 const { validationResult } = require('express-validator');
 const userService = require('../services/userService');
-const { generateToken, generateRefreshToken, verifyRefreshToken } = require('../utils/jwt');
+const {
+  generateToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} = require('../utils/jwt');
 const logger = require('../utils/logger');
 
 async function register(req, res) {
@@ -97,5 +101,3 @@ module.exports = {
   refresh,
   getMe,
 };
-
-

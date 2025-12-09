@@ -16,7 +16,7 @@ describe('UserService', () => {
 
       expect(user.id).toBeDefined();
       expect(typeof user.id).toBe('string');
-      
+
       // Retry logic to handle potential race conditions
       let foundUser = null;
       let retries = 0;
@@ -25,14 +25,14 @@ describe('UserService', () => {
           foundUser = await userService.getUserById(user.id);
         } catch (error) {
           if (retries < 4) {
-            await new Promise(resolve => setTimeout(resolve, 50));
+            await new Promise((resolve) => setTimeout(resolve, 50));
             retries++;
             continue;
           }
           throw error;
         }
       }
-      
+
       expect(foundUser).toBeDefined();
       expect(foundUser.id).toBe(user.id);
       expect(foundUser.email).toBe(email);
@@ -46,4 +46,3 @@ describe('UserService', () => {
     });
   });
 });
-

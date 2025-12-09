@@ -7,7 +7,10 @@ describe('Auth Middleware', () => {
     test('should reject when user not found after token verification', async () => {
       // Generate a valid token for a non-existent user
       const fakeUserId = '00000000-0000-0000-0000-000000000000';
-      const token = generateToken({ userId: fakeUserId, email: 'fake@example.com' });
+      const token = generateToken({
+        userId: fakeUserId,
+        email: 'fake@example.com',
+      });
 
       const response = await request(app)
         .get('/api/auth/me')
@@ -19,4 +22,3 @@ describe('Auth Middleware', () => {
     });
   });
 });
-

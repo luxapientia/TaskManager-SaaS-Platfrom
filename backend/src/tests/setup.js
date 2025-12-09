@@ -7,7 +7,7 @@ let indexExistedBefore = false;
 beforeAll(async () => {
   try {
     await pool.query('SELECT 1');
-    
+
     const tableCheck = await pool.query(`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
@@ -16,7 +16,7 @@ beforeAll(async () => {
       );
     `);
     tableExistedBefore = tableCheck.rows[0].exists;
-    
+
     const indexCheck = await pool.query(`
       SELECT EXISTS (
         SELECT FROM pg_indexes 
@@ -25,7 +25,7 @@ beforeAll(async () => {
       );
     `);
     indexExistedBefore = indexCheck.rows[0].exists;
-    
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -42,9 +42,9 @@ beforeAll(async () => {
   } catch (error) {
     throw new Error(
       `Database setup failed: ${error.message}\n` +
-      'Make sure PostgreSQL is running.\n' +
-      'You can start it with: docker-compose up -d postgres\n' +
-      'Or set DATABASE_URL environment variable.'
+        'Make sure PostgreSQL is running.\n' +
+        'You can start it with: docker-compose up -d postgres\n' +
+        'Or set DATABASE_URL environment variable.'
     );
   }
 });
@@ -68,7 +68,7 @@ afterAll(async () => {
   } catch (error) {
     // Ignore errors during teardown
   }
-  
+
   try {
     if (pool && !pool.ended) {
       await pool.end();
@@ -76,7 +76,7 @@ afterAll(async () => {
   } catch (error) {
     // Ignore errors during pool closure
   }
-  
+
   try {
     if (redisClient && redisClient.isOpen) {
       await redisClient.quit();
@@ -85,4 +85,3 @@ afterAll(async () => {
     // Ignore errors during Redis closure
   }
 });
-

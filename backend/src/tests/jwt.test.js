@@ -61,4 +61,3 @@ describe('JWT Utils', () => {
     });
   });
 });
-

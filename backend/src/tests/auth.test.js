@@ -225,10 +225,12 @@ describe('Authentication API', () => {
   describe('Error handling', () => {
     test('should handle 500 error in register for unexpected errors', async () => {
       const User = require('../models/User');
-      
+
       // Mock User.create to throw an unexpected error
       const originalCreate = User.create;
-      User.create = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      User.create = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
       const response = await request(app)
         .post('/api/auth/register')
@@ -248,10 +250,12 @@ describe('Authentication API', () => {
 
     test('should handle 500 error in login for unexpected errors', async () => {
       const User = require('../models/User');
-      
+
       // Mock User.findByEmail to throw an unexpected error
       const originalFindByEmail = User.findByEmail;
-      User.findByEmail = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      User.findByEmail = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
       const response = await request(app)
         .post('/api/auth/login')
@@ -278,9 +282,9 @@ describe('Authentication API', () => {
           password: 'Test1234',
           name: 'GetMe Error User',
         });
-      
+
       const token = registerResponse.body.token;
-      
+
       // Test that getMe works correctly
       const response = await request(app)
         .get('/api/auth/me')
@@ -291,4 +295,3 @@ describe('Authentication API', () => {
     });
   });
 });
-
