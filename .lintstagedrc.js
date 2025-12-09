@@ -1,17 +1,16 @@
 module.exports = {
   'frontend/**/*.{ts,tsx}': [
-    'cd frontend && npx eslint --fix',
-    'cd frontend && npx prettier --write'
+    'cd frontend && npm run lint:fix',
+    'cd frontend && npm run format'
   ],
   'frontend/**/*.{json,css}': [
-    'cd frontend && npx prettier --write'
+    'cd frontend && npm run format'
   ],
   'backend/**/*.js': [
-    'cd backend && npx eslint --fix',
-    'cd backend && npx prettier --write'
+    'cd backend && npm run lint:fix',
+    'cd backend && npm run format'
   ],
   '*.{md,json}': [
     'npx prettier --write'
   ]
 };
-
