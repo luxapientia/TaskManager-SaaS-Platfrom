@@ -20,7 +20,9 @@ describe('ProtectedRoute', () => {
   });
 
   test('redirects to login when not authenticated', async () => {
-    (api.authAPI.getMe as jest.Mock).mockRejectedValue(new Error('Not authenticated'));
+    (api.authAPI.getMe as jest.Mock).mockRejectedValue(
+      new Error('Not authenticated')
+    );
 
     render(
       <MemoryRouter
@@ -103,4 +105,3 @@ describe('ProtectedRoute', () => {
     });
   });
 });
-

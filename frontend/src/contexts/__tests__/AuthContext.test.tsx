@@ -70,7 +70,9 @@ describe('AuthContext', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/Authenticated: test@example.com/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Authenticated: test@example.com/)
+      ).toBeInTheDocument();
     });
   });
 
@@ -88,5 +90,3 @@ describe('AuthContext', () => {
     });
   });
 });
-
-

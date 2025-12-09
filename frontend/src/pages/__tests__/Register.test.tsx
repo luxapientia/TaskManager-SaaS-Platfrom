@@ -19,9 +19,7 @@ const renderWithRouter = (component: React.ReactElement) => {
         v7_relativeSplatPath: true,
       }}
     >
-      <AuthProvider>
-        {component}
-      </AuthProvider>
+      <AuthProvider>{component}</AuthProvider>
     </BrowserRouter>
   );
 };
@@ -34,7 +32,9 @@ describe('Register', () => {
 
   test('renders register form', () => {
     renderWithRouter(<Register />);
-    expect(screen.getByRole('heading', { name: 'Register' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Register' })
+    ).toBeInTheDocument();
     expect(screen.getByLabelText('Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
@@ -109,9 +109,7 @@ describe('Register', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(
-          /Password must contain at least one uppercase letter/
-        )
+        screen.getByText(/Password must contain at least one uppercase letter/)
       ).toBeInTheDocument();
     });
   });
@@ -144,4 +142,3 @@ describe('Register', () => {
     });
   });
 });
-

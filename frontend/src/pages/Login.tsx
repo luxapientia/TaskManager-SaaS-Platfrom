@@ -30,7 +30,9 @@ const Login: React.FC = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Login</h2>
-        <p className="auth-subtitle">Welcome back! Please login to your account.</p>
+        <p className="auth-subtitle">
+          Welcome back! Please login to your account.
+        </p>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -76,8 +78,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
-
-
-
-

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { authAPI, User } from '../services/api';
 
 interface AuthContextType {
@@ -56,7 +62,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(response.user);
     } catch (error: any) {
       throw new Error(
-        error.response?.data?.error || 'Login failed. Please check your credentials.'
+        error.response?.data?.error ||
+          'Login failed. Please check your credentials.'
       );
     }
   };
@@ -94,8 +101,3 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
-
-
-
-

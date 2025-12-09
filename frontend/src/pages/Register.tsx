@@ -97,7 +97,8 @@ const Register: React.FC = () => {
               minLength={8}
             />
             <small className="form-hint">
-              Must be at least 8 characters with uppercase, lowercase, and number
+              Must be at least 8 characters with uppercase, lowercase, and
+              number
             </small>
           </div>
 
@@ -129,8 +130,3 @@ const Register: React.FC = () => {
 };
 
 export default Register;
-
-
-
-
-

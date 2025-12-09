@@ -19,9 +19,7 @@ const renderWithRouter = (component: React.ReactElement) => {
         v7_relativeSplatPath: true,
       }}
     >
-      <AuthProvider>
-        {component}
-      </AuthProvider>
+      <AuthProvider>{component}</AuthProvider>
     </BrowserRouter>
   );
 };
@@ -88,9 +86,8 @@ describe('Login', () => {
 
     const emailInput = screen.getByLabelText('Email');
     const passwordInput = screen.getByLabelText('Password');
-    
+
     expect(emailInput).toHaveAttribute('required');
     expect(passwordInput).toHaveAttribute('required');
   });
 });
-
