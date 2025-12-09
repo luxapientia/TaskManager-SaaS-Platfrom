@@ -5,10 +5,11 @@ const runCommand = (command, cwd) => {
   try {
     execSync(command, { 
       cwd: path.resolve(cwd), 
-      stdio: 'inherit',
+      stdio: 'pipe',
       shell: true
     });
   } catch (error) {
+    console.error(error.stdout?.toString() || error.message);
     process.exit(1);
   }
 };
