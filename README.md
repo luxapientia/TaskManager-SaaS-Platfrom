@@ -2,6 +2,8 @@
 
 A cloud-based task and project management platform built with modern DevOps practices.
 
+> **Note**: This project follows Git workflow best practices with automated pre-commit hooks.
+
 ## 🚀 Features
 
 - **Task Management**: Create, assign, and track tasks
@@ -30,23 +32,27 @@ A cloud-based task and project management platform built with modern DevOps prac
 ### Local Development
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd taskmanager-saas
 ```
 
 2. Start the development environment:
+
 ```bash
 docker-compose up -d
 ```
 
 3. Install dependencies:
+
 ```bash
 cd frontend && npm install
 cd ../backend && npm install
 ```
 
 4. Start the development servers:
+
 ```bash
 # Frontend (from frontend directory)
 npm start
@@ -99,4 +105,3 @@ All documentation is organized in the [`docs/`](./docs/) directory:
 ## 📄 License
 
 MIT
-
