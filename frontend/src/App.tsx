@@ -6,11 +6,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>TaskManager SaaS</h1>
-        <p>Welcome to TaskManager - Your task and project management platform</p>
+        <p>
+          Welcome to TaskManager - Your task and project management platform
+        </p>
       </header>
     </div>
   );
 }
 
 export default App;
-

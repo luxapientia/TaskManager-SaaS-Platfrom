@@ -7,4 +7,3 @@ test('renders TaskManager heading', () => {
   const headingElement = screen.getByText(/TaskManager SaaS/i);
   expect(headingElement).toBeInTheDocument();
 });
-
