@@ -23,9 +23,13 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       api: '/api',
+      auth: '/api/auth',
     },
   });
 });
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
 
 if (require.main === module) {
   app.listen(PORT, () => {
