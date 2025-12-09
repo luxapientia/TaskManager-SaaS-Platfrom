@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const logger = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,21 +17,20 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/api', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'TaskManager API',
     version: '0.1.0',
     endpoints: {
       health: '/health',
-      api: '/api'
-    }
+      api: '/api',
+    },
   });
 });
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    logger.info(`Server is running on port ${PORT}`);
   });
 }
 
 module.exports = app;
-
