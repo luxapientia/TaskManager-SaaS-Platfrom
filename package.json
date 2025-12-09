@@ -1,0 +1,25 @@
+{
+  "name": "taskmanager-saas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TaskManager SaaS - Full SDLC + DevOps Implementation",
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
