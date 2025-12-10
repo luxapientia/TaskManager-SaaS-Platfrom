@@ -30,10 +30,10 @@ describe('TaskForm', () => {
 
     expect(screen.getByText('Create New Task')).toBeInTheDocument();
     expect(screen.getByLabelText('Title *')).toBeInTheDocument();
-    expect(screen.getByLabelText('Description')).toBeInTheDocument();
-    expect(screen.getByLabelText('Status')).toBeInTheDocument();
-    expect(screen.getByLabelText('Priority')).toBeInTheDocument();
-    expect(screen.getByLabelText('Due Date')).toBeInTheDocument();
+    expect(screen.getByLabelText('Description *')).toBeInTheDocument();
+    expect(screen.getByLabelText('Status *')).toBeInTheDocument();
+    expect(screen.getByLabelText('Priority *')).toBeInTheDocument();
+    expect(screen.getByLabelText('Due Date *')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Create Task' })
     ).toBeInTheDocument();
@@ -72,16 +72,16 @@ describe('TaskForm', () => {
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'New Task' },
     });
-    fireEvent.change(screen.getByLabelText('Description'), {
+    fireEvent.change(screen.getByLabelText('Description *'), {
       target: { value: 'New Description' },
     });
-    fireEvent.change(screen.getByLabelText('Status'), {
+    fireEvent.change(screen.getByLabelText('Status *'), {
       target: { value: 'done' },
     });
-    fireEvent.change(screen.getByLabelText('Priority'), {
+    fireEvent.change(screen.getByLabelText('Priority *'), {
       target: { value: 'low' },
     });
-    fireEvent.change(screen.getByLabelText('Due Date'), {
+    fireEvent.change(screen.getByLabelText('Due Date *'), {
       target: { value: '2024-12-31' },
     });
 
@@ -124,47 +124,42 @@ describe('TaskForm', () => {
     });
   });
 
-  test('handles empty description', async () => {
+  test('shows error when description is empty', async () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'Task Without Description' },
     });
-    fireEvent.change(screen.getByLabelText('Description'), {
-      target: { value: '' },
+    fireEvent.change(screen.getByLabelText('Due Date *'), {
+      target: { value: '2024-12-31' },
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Create Task' }));
 
     await waitFor(() => {
-      expect(mockOnSubmit).toHaveBeenCalledWith({
-        title: 'Task Without Description',
-        description: undefined,
-        status: 'todo',
-        priority: 'medium',
-        due_date: undefined,
-      });
+      expect(screen.getByText('Description is required')).toBeInTheDocument();
     });
+
+    expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
-  test('handles empty due date', async () => {
+  test('shows error when due date is empty', async () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'Task Without Due Date' },
     });
+    fireEvent.change(screen.getByLabelText('Description *'), {
+      target: { value: 'Task Description' },
+    });
 
     fireEvent.click(screen.getByRole('button', { name: 'Create Task' }));
 
     await waitFor(() => {
-      expect(mockOnSubmit).toHaveBeenCalledWith({
-        title: 'Task Without Due Date',
-        description: undefined,
-        status: 'todo',
-        priority: 'medium',
-        due_date: undefined,
-      });
+      expect(screen.getByText('Due date is required')).toBeInTheDocument();
     });
+
+    expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
   test('shows error message on submit failure', async () => {
@@ -175,6 +170,12 @@ describe('TaskForm', () => {
 
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'Test Task' },
+    });
+    fireEvent.change(screen.getByLabelText('Description *'), {
+      target: { value: 'Test Description' },
+    });
+    fireEvent.change(screen.getByLabelText('Due Date *'), {
+      target: { value: '2024-12-31' },
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Create Task' }));
@@ -202,6 +203,12 @@ describe('TaskForm', () => {
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'Test Task' },
     });
+    fireEvent.change(screen.getByLabelText('Description *'), {
+      target: { value: 'Test Description' },
+    });
+    fireEvent.change(screen.getByLabelText('Due Date *'), {
+      target: { value: '2024-12-31' },
+    });
 
     fireEvent.click(screen.getByRole('button', { name: 'Create Task' }));
 
@@ -209,16 +216,16 @@ describe('TaskForm', () => {
       expect(screen.getByLabelText('Title *')).toBeDisabled();
     });
     await waitFor(() => {
-      expect(screen.getByLabelText('Description')).toBeDisabled();
+      expect(screen.getByLabelText('Description *')).toBeDisabled();
     });
     await waitFor(() => {
-      expect(screen.getByLabelText('Status')).toBeDisabled();
+      expect(screen.getByLabelText('Status *')).toBeDisabled();
     });
     await waitFor(() => {
-      expect(screen.getByLabelText('Priority')).toBeDisabled();
+      expect(screen.getByLabelText('Priority *')).toBeDisabled();
     });
     await waitFor(() => {
-      expect(screen.getByLabelText('Due Date')).toBeDisabled();
+      expect(screen.getByLabelText('Due Date *')).toBeDisabled();
     });
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled();
