@@ -53,20 +53,19 @@ jobs:
         env:
           NODE_ENV: development
         run: |
-          echo "Clearing npm cache and removing node_modules..."
-          npm cache clean --force || true
-          rm -rf node_modules
-          echo "Installing dependencies..."
-          npm install --no-audit --no-fund
+          echo "Installing frontend dependencies..."
+          npm ci --no-audit --no-fund
           echo "Verifying eslint installation..."
-          npm list eslint || (echo "ESLint not found, installing..." && npm install eslint@^8.54.0 --save-dev --no-audit --no-fund)
+          npm list eslint
           test -f node_modules/.bin/eslint || (echo "ESLint binary missing!" && exit 1)
           ./node_modules/.bin/eslint --version
           echo "ESLint verified successfully"
       
       - name: Install backend dependencies
         working-directory: ./backend
-        run: npm ci --prefer-offline --no-audit
+        run: |
+          echo "Installing backend dependencies..."
+          npm ci --no-audit
       
       - name: Lint frontend
         working-directory: ./frontend
