@@ -53,16 +53,14 @@ jobs:
         env:
           NODE_ENV: development
         run: |
+          echo "Clearing npm cache..."
+          npm cache clean --force || true
           echo "Installing dependencies..."
+          rm -rf node_modules package-lock.json
           npm install --no-audit --no-fund
           echo "Verifying eslint installation..."
-          npm list eslint || echo "ESLint not in package tree"
-          ls -la node_modules/.bin/ | grep eslint || echo "ESLint binary not found"
-          # Force install eslint if not found
-          if [ ! -f node_modules/.bin/eslint ]; then
-            echo "ESLint binary missing, installing explicitly..."
-            npm install eslint@^8.54.0 eslint-plugin-react@^7.33.2 eslint-plugin-react-hooks@^4.6.0 @typescript-eslint/eslint-plugin@^6.13.1 @typescript-eslint/parser@^6.13.1 --save-dev --no-audit --no-fund
-          fi
+          npm list eslint
+          ls -la node_modules/.bin/eslint
           # Verify eslint works
           ./node_modules/.bin/eslint --version
           echo "ESLint verified successfully"
