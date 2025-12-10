@@ -53,15 +53,14 @@ jobs:
         env:
           NODE_ENV: development
         run: |
-          echo "Clearing npm cache..."
+          echo "Clearing npm cache and removing node_modules..."
           npm cache clean --force || true
+          rm -rf node_modules
           echo "Installing dependencies..."
-          rm -rf node_modules package-lock.json
           npm install --no-audit --no-fund
           echo "Verifying eslint installation..."
-          npm list eslint
-          ls -la node_modules/.bin/eslint
-          # Verify eslint works
+          npm list eslint || (echo "ESLint not found, installing..." && npm install eslint@^8.54.0 --save-dev --no-audit --no-fund)
+          test -f node_modules/.bin/eslint || (echo "ESLint binary missing!" && exit 1)
           ./node_modules/.bin/eslint --version
           echo "ESLint verified successfully"
       
