@@ -85,6 +85,7 @@ describe('Task API', () => {
         description: 'Test Description',
         status: 'todo',
         priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
       };
 
       const response = await request(app)
@@ -106,6 +107,10 @@ describe('Task API', () => {
     test('should create a task with assigned_to', async () => {
       const taskData = {
         title: 'Assigned Task',
+        description: 'Assigned Task Description',
+        status: 'todo',
+        priority: 'high',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         assigned_to: testUser2.id,
       };
 
@@ -177,7 +182,14 @@ describe('Task API', () => {
       const response = await request(app)
         .post('/api/tasks')
         .set('Authorization', `Bearer ${authToken}`)
-        .send({ title: 'Test', assigned_to: randomUUID() })
+        .send({
+          title: 'Test',
+          description: 'Test Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+          assigned_to: randomUUID(),
+        })
         .expect(404);
 
       expect(response.body).toHaveProperty('error');
@@ -190,11 +202,18 @@ describe('Task API', () => {
       // Create a few tasks
       const task1 = await Task.create({
         title: 'Task 1',
+        description: 'Description 1',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
       const task2 = await Task.create({
         title: 'Task 2',
+        description: 'Description 2',
         status: 'in-progress',
+        priority: 'high',
+        due_date: new Date(Date.now() + 172800000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -216,7 +235,10 @@ describe('Task API', () => {
     test('should filter tasks by status', async () => {
       const task = await Task.create({
         title: 'Done Task',
+        description: 'Done Task Description',
         status: 'done',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -235,7 +257,10 @@ describe('Task API', () => {
     test('should filter tasks by priority', async () => {
       const task = await Task.create({
         title: 'High Priority Task',
+        description: 'High Priority Description',
+        status: 'todo',
         priority: 'high',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -264,6 +289,10 @@ describe('Task API', () => {
     test('should get a task by id', async () => {
       const task = await Task.create({
         title: 'Get Task Test',
+        description: 'Get Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -305,6 +334,10 @@ describe('Task API', () => {
 
       const task = await Task.create({
         title: 'Unauthorized Task',
+        description: 'Unauthorized Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -333,6 +366,10 @@ describe('Task API', () => {
     test('should update a task successfully', async () => {
       const task = await Task.create({
         title: 'Original Title',
+        description: 'Original Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -385,6 +422,10 @@ describe('Task API', () => {
 
       const task = await Task.create({
         title: 'Unauthorized Update',
+        description: 'Unauthorized Update Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -403,6 +444,10 @@ describe('Task API', () => {
     test('should return 403 if non-owner tries to assign task', async () => {
       const task = await Task.create({
         title: 'Assignment Test',
+        description: 'Assignment Test Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         assigned_to: testUser2.id,
         user_id: testUser.id,
       });
@@ -428,6 +473,10 @@ describe('Task API', () => {
     test('should return 404 if assigned user not found during update', async () => {
       const task = await Task.create({
         title: 'Update Assignment Test',
+        description: 'Update Assignment Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -449,6 +498,10 @@ describe('Task API', () => {
     test('should delete a task successfully', async () => {
       const task = await Task.create({
         title: 'Delete Me',
+        description: 'Delete Me Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -490,6 +543,10 @@ describe('Task API', () => {
 
       const task = await Task.create({
         title: 'Unauthorized Delete',
+        description: 'Unauthorized Delete Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -512,7 +569,13 @@ describe('Task API', () => {
       const response = await request(app)
         .post('/api/tasks')
         .set('Authorization', `Bearer ${authToken}`)
-        .send({ title: 'Test Task' })
+        .send({
+          title: 'Test Task',
+          description: 'Test Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        })
         .expect(500);
 
       expect(response.body).toHaveProperty('error');
@@ -540,6 +603,10 @@ describe('Task API', () => {
     test('should return 500 on unexpected error in getTask', async () => {
       const task = await Task.create({
         title: 'Test Task',
+        description: 'Test Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -564,6 +631,10 @@ describe('Task API', () => {
     test('should return 500 on unexpected error in updateTask', async () => {
       const task = await Task.create({
         title: 'Test Task',
+        description: 'Test Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 
@@ -589,6 +660,10 @@ describe('Task API', () => {
     test('should return 500 on unexpected error in deleteTask', async () => {
       const task = await Task.create({
         title: 'Test Task',
+        description: 'Test Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         user_id: testUser.id,
       });
 

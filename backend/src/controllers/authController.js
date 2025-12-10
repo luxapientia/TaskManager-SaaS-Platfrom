@@ -95,9 +95,40 @@ async function getMe(req, res) {
   }
 }
 
+async function updateProfile(req, res) {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, email } = req.body;
+    const updates = {};
+    if (name !== undefined) updates.name = name;
+    if (email !== undefined) updates.email = email;
+
+    const updatedUser = await userService.updateProfile(req.user.id, updates);
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: updatedUser,
+    });
+  } catch (error) {
+    logger.error('Update profile error:', error);
+    if (
+      error.message === 'User not found' ||
+      error.message === 'Email already in use'
+    ) {
+      return res.status(400).json({ error: error.message });
+    }
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   register,
   login,
   refresh,
   getMe,
+  updateProfile,
 };

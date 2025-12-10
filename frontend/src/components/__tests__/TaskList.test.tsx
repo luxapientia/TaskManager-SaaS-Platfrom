@@ -25,7 +25,7 @@ describe('TaskList', () => {
       status: 'todo' as const,
       user_id: 'user1',
       assigned_to: null,
-      due_date: null,
+      due_date: '2024-12-31T00:00:00Z',
       priority: 'medium' as const,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
@@ -128,7 +128,7 @@ describe('TaskList', () => {
         status: 'todo',
         user_id: 'user1',
         assigned_to: null,
-        due_date: null,
+        due_date: '2024-12-31T00:00:00Z',
         priority: 'medium',
         created_at: '2024-01-03T00:00:00Z',
         updated_at: '2024-01-03T00:00:00Z',
@@ -152,8 +152,11 @@ describe('TaskList', () => {
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'New Task' },
     });
-    fireEvent.change(screen.getByLabelText('Description'), {
+    fireEvent.change(screen.getByLabelText('Description *'), {
       target: { value: 'New Description' },
+    });
+    fireEvent.change(screen.getByLabelText('Due Date *'), {
+      target: { value: '2024-12-31' },
     });
 
     // Submit form
@@ -165,7 +168,7 @@ describe('TaskList', () => {
         description: 'New Description',
         status: 'todo',
         priority: 'medium',
-        due_date: undefined,
+        due_date: '2024-12-31',
       });
     });
 
@@ -223,6 +226,15 @@ describe('TaskList', () => {
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'Updated Task' },
     });
+    // Ensure due_date is filled (it's required)
+    const dueDateInput = screen.getByLabelText(
+      'Due Date *'
+    ) as HTMLInputElement;
+    if (!dueDateInput.value) {
+      fireEvent.change(dueDateInput, {
+        target: { value: '2024-12-31' },
+      });
+    }
 
     // Submit
     fireEvent.click(screen.getByRole('button', { name: 'Update Task' }));

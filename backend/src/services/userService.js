@@ -34,6 +34,24 @@ class UserService {
     }
     return user.toJSON();
   }
+
+  async updateProfile(userId, updates) {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Check if email is being changed and if it already exists
+    if (updates.email && updates.email !== user.email) {
+      const existingUser = await User.findByEmail(updates.email);
+      if (existingUser) {
+        throw new Error('Email already in use');
+      }
+    }
+
+    const updatedUser = await user.update(updates);
+    return updatedUser.toJSON();
+  }
 }
 
 module.exports = new UserService();

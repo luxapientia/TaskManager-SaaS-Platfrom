@@ -16,26 +16,32 @@ const createTaskValidator = [
     .isLength({ min: 1, max: 255 })
     .withMessage('Title must be between 1 and 255 characters'),
   body('description')
-    .optional()
     .trim()
+    .notEmpty()
+    .withMessage('Description is required')
     .isString()
-    .withMessage('Description must be a string'),
+    .withMessage('Description must be a string')
+    .isLength({ min: 1 })
+    .withMessage('Description cannot be empty'),
   body('status')
-    .optional()
+    .notEmpty()
+    .withMessage('Status is required')
     .isIn(['todo', 'in-progress', 'done'])
     .withMessage('Status must be one of: todo, in-progress, done'),
+  body('due_date')
+    .notEmpty()
+    .withMessage('Due date is required')
+    .isISO8601()
+    .withMessage('Due date must be a valid ISO 8601 date'),
+  body('priority')
+    .notEmpty()
+    .withMessage('Priority is required')
+    .isIn(['low', 'medium', 'high'])
+    .withMessage('Priority must be one of: low, medium, high'),
   body('assigned_to')
     .optional()
     .isUUID()
     .withMessage('Assigned to must be a valid UUID'),
-  body('due_date')
-    .optional()
-    .isISO8601()
-    .withMessage('Due date must be a valid ISO 8601 date'),
-  body('priority')
-    .optional()
-    .isIn(['low', 'medium', 'high'])
-    .withMessage('Priority must be one of: low, medium, high'),
   validate,
 ];
 
@@ -51,16 +57,16 @@ const updateTaskValidator = [
   body('description')
     .optional()
     .trim()
+    .notEmpty()
+    .withMessage('Description cannot be empty')
     .isString()
-    .withMessage('Description must be a string'),
+    .withMessage('Description must be a string')
+    .isLength({ min: 1 })
+    .withMessage('Description cannot be empty'),
   body('status')
     .optional()
     .isIn(['todo', 'in-progress', 'done'])
     .withMessage('Status must be one of: todo, in-progress, done'),
-  body('assigned_to')
-    .optional()
-    .isUUID()
-    .withMessage('Assigned to must be a valid UUID'),
   body('due_date')
     .optional()
     .isISO8601()
@@ -69,6 +75,10 @@ const updateTaskValidator = [
     .optional()
     .isIn(['low', 'medium', 'high'])
     .withMessage('Priority must be one of: low, medium, high'),
+  body('assigned_to')
+    .optional()
+    .isUUID()
+    .withMessage('Assigned to must be a valid UUID'),
   validate,
 ];
 

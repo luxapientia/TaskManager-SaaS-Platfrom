@@ -68,6 +68,45 @@ class User {
     return bcrypt.compare(password, this.password_hash);
   }
 
+  async update(updates) {
+    const allowedFields = ['email', 'name'];
+    const updateFields = [];
+    const values = [];
+    let paramCount = 1;
+
+    for (const field of allowedFields) {
+      if (Object.prototype.hasOwnProperty.call(updates, field)) {
+        updateFields.push(`${field} = $${paramCount}`);
+        values.push(updates[field]);
+        paramCount++;
+      }
+    }
+
+    if (updateFields.length === 0) {
+      return this;
+    }
+
+    updateFields.push(`updated_at = current_timestamp`);
+    values.push(this.id);
+
+    const query = `
+      UPDATE users
+      SET ${updateFields.join(', ')}
+      WHERE id = $${paramCount}
+      RETURNING id, email, name, created_at, updated_at
+    `;
+
+    try {
+      const result = await pool.query(query, values);
+      const updatedUser = new User(result.rows[0]);
+      logger.info(`User updated: ${updatedUser.email}`);
+      return updatedUser;
+    } catch (error) {
+      logger.error('Error updating user:', error);
+      throw error;
+    }
+  }
+
   toJSON() {
     return {
       id: this.id,

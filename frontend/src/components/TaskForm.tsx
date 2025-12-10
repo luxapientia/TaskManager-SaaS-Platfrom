@@ -24,6 +24,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
       setStatus(task.status);
       setPriority(task.priority);
       setDueDate(task.due_date ? task.due_date.split('T')[0] : '');
+    } else {
+      // Reset form for new task
+      setTitle('');
+      setDescription('');
+      setStatus('todo');
+      setPriority('medium');
+      setDueDate('');
     }
   }, [task]);
 
@@ -32,13 +39,25 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
     setLoading(true);
     setError(null);
 
+    if (!description.trim()) {
+      setError('Description is required');
+      setLoading(false);
+      return;
+    }
+
+    if (!dueDate) {
+      setError('Due date is required');
+      setLoading(false);
+      return;
+    }
+
     try {
       const taskData: CreateTaskData = {
         title,
-        description: description || undefined,
+        description,
         status,
         priority,
-        due_date: dueDate || undefined,
+        due_date: dueDate,
       };
 
       await onSubmit(taskData);
@@ -68,25 +87,27 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Description *</label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
+              required
               disabled={loading}
             />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="status">Status</label>
+              <label htmlFor="status">Status *</label>
               <select
                 id="status"
                 value={status}
                 onChange={(e) =>
                   setStatus(e.target.value as 'todo' | 'in-progress' | 'done')
                 }
+                required
                 disabled={loading}
               >
                 <option value="todo">Todo</option>
@@ -96,13 +117,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="priority">Priority</label>
+              <label htmlFor="priority">Priority *</label>
               <select
                 id="priority"
                 value={priority}
                 onChange={(e) =>
                   setPriority(e.target.value as 'low' | 'medium' | 'high')
                 }
+                required
                 disabled={loading}
               >
                 <option value="low">Low</option>
@@ -113,12 +135,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="dueDate">Due Date</label>
+            <label htmlFor="dueDate">Due Date *</label>
             <input
               type="date"
               id="dueDate"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
+              required
               disabled={loading}
             />
           </div>
