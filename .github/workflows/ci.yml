@@ -55,23 +55,40 @@ jobs:
         run: |
           set -e
           echo "Environment: NODE_ENV=$NODE_ENV"
-          echo "Installing frontend dependencies with npm install..."
+          echo "Checking npm and node versions:"
+          npm --version
+          node --version
+          echo "Installing frontend dependencies..."
           npm install --no-audit --no-fund
-          echo "Verifying installation..."
-          echo "Checking if node_modules/.bin exists and listing contents:"
-          ls -la node_modules/.bin/ 2>&1 | grep -E "(eslint|total)" || echo "No eslint found in listing"
+          echo "Checking node_modules structure:"
+          ls -la node_modules 2>&1 | head -10
+          echo "Checking if node_modules/.bin exists:"
+          test -d node_modules/.bin && echo "node_modules/.bin exists" || echo "node_modules/.bin MISSING!"
+          echo "Listing all binaries in node_modules/.bin:"
+          ls -la node_modules/.bin/ 2>&1 | head -20 || echo "Cannot list node_modules/.bin"
+          echo "Checking for eslint:"
+          find node_modules -name "eslint" -type f 2>/dev/null | head -5 || echo "No eslint executable found"
+          echo "Checking eslint package:"
+          test -d node_modules/eslint && echo "eslint package directory exists" || echo "eslint package MISSING"
           echo "Checking eslint binary explicitly:"
-          if [ ! -f node_modules/.bin/eslint ] && [ ! -L node_modules/.bin/eslint ]; then
-            echo "ERROR: ESLint binary is missing! Attempting to fix..."
-            echo "Checking if eslint package is installed:"
-            npm list eslint --depth=0 || echo "eslint not in tree"
-            echo "Reinstalling eslint..."
-            npm install eslint@^8.54.0 --save-dev --no-audit --no-fund --force
-            echo "Verifying after reinstall:"
-            ls -la node_modules/.bin/eslint || (echo "Still missing! Exiting..." && exit 1)
+          if [ -f node_modules/.bin/eslint ] || [ -L node_modules/.bin/eslint ]; then
+            echo "ESLint binary found!"
+            ls -la node_modules/.bin/eslint
+          else
+            echo "ERROR: ESLint binary is missing!"
+            echo "Attempting to rebuild binaries..."
+            npm rebuild || true
+            echo "Checking again after rebuild:"
+            ls -la node_modules/.bin/eslint 2>&1 || echo "Still missing after rebuild"
+            echo "Trying explicit reinstall..."
+            npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
+            echo "Checking package.json bin field:"
+            cat node_modules/eslint/package.json | grep -A 5 '"bin"' || echo "No bin field found"
+            echo "Final check:"
+            ls -la node_modules/.bin/eslint 2>&1 || (echo "ESLint binary STILL missing! This is a critical error." && exit 1)
           fi
           echo "Testing eslint binary:"
-          node_modules/.bin/eslint --version || (echo "ESLint binary failed!" && exit 1)
+          node_modules/.bin/eslint --version
           echo "ESLint verified successfully"
       
       - name: Install backend dependencies
