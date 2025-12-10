@@ -55,10 +55,15 @@ jobs:
         run: |
           echo "Installing frontend dependencies..."
           npm ci --no-audit --no-fund
-          echo "Verifying eslint installation..."
-          npm list eslint
-          test -f node_modules/.bin/eslint || (echo "ESLint binary missing!" && exit 1)
-          ./node_modules/.bin/eslint --version
+          echo "Verifying installation..."
+          echo "Checking node_modules/.bin contents:"
+          ls -la node_modules/.bin/ | head -20
+          echo "Checking eslint specifically:"
+          ls -la node_modules/.bin/eslint || echo "ESLint binary NOT found!"
+          echo "Verifying eslint in package tree:"
+          npm list eslint || echo "ESLint NOT in package tree!"
+          echo "Testing eslint binary:"
+          ./node_modules/.bin/eslint --version || (echo "ESLint binary failed!" && exit 1)
           echo "ESLint verified successfully"
       
       - name: Install backend dependencies
@@ -69,7 +74,13 @@ jobs:
       
       - name: Lint frontend
         working-directory: ./frontend
-        run: npm run lint
+        run: |
+          echo "Current PATH: $PATH"
+          echo "Checking eslint location:"
+          which eslint || echo "eslint not in PATH"
+          ./node_modules/.bin/eslint --version || echo "Direct path failed"
+          echo "Running npm run lint:"
+          npm run lint
       
       - name: Lint backend
         working-directory: ./backend
