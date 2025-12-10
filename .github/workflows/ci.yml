@@ -53,15 +53,24 @@ jobs:
         env:
           NODE_ENV: development
         run: |
+          echo "Environment: NODE_ENV=$NODE_ENV"
           echo "Installing frontend dependencies..."
           npm ci --no-audit --no-fund
-          echo "Verifying installation..."
-          echo "Checking node_modules/.bin contents:"
-          ls -la node_modules/.bin/ | head -20
+          echo "Checking if node_modules exists:"
+          ls -la node_modules 2>&1 | head -5 || echo "node_modules not found!"
+          echo "Checking if node_modules/.bin exists:"
+          ls -la node_modules/.bin 2>&1 | head -10 || echo "node_modules/.bin not found!"
           echo "Checking eslint specifically:"
-          ls -la node_modules/.bin/eslint || echo "ESLint binary NOT found!"
+          ls -la node_modules/.bin/eslint 2>&1 || echo "ESLint binary NOT found!"
           echo "Verifying eslint in package tree:"
-          npm list eslint || echo "ESLint NOT in package tree!"
+          npm list eslint 2>&1 || echo "ESLint NOT in package tree!"
+          echo "Checking if eslint package exists:"
+          ls -la node_modules/eslint 2>&1 | head -5 || echo "eslint package not found!"
+          if [ ! -f node_modules/.bin/eslint ]; then
+            echo "ERROR: ESLint binary is missing! Installing eslint explicitly..."
+            npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
+            ls -la node_modules/.bin/eslint || (echo "Still missing after install!" && exit 1)
+          fi
           echo "Testing eslint binary:"
           ./node_modules/.bin/eslint --version || (echo "ESLint binary failed!" && exit 1)
           echo "ESLint verified successfully"
