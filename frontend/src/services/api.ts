@@ -99,6 +99,53 @@ export interface User {
   updated_at: string;
 }
 
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  status: 'todo' | 'in-progress' | 'done';
+  user_id: string;
+  assigned_to: string | null;
+  due_date: string | null;
+  priority: 'low' | 'medium' | 'high';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateTaskData {
+  title: string;
+  description?: string;
+  status?: 'todo' | 'in-progress' | 'done';
+  assigned_to?: string;
+  due_date?: string;
+  priority?: 'low' | 'medium' | 'high';
+}
+
+export interface UpdateTaskData {
+  title?: string;
+  description?: string;
+  status?: 'todo' | 'in-progress' | 'done';
+  assigned_to?: string;
+  due_date?: string;
+  priority?: 'low' | 'medium' | 'high';
+}
+
+export interface TaskResponse {
+  message: string;
+  task: Task;
+}
+
+export interface TasksResponse {
+  message: string;
+  tasks: Task[];
+}
+
+export interface TaskFilters {
+  status?: 'todo' | 'in-progress' | 'done';
+  assigned_to?: string;
+  priority?: 'low' | 'medium' | 'high';
+}
+
 // Auth API functions
 export const authAPI = {
   register: async (data: RegisterData): Promise<AuthResponse> => {
@@ -126,6 +173,41 @@ export const authAPI = {
   logout: (): void => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
+  },
+};
+
+// Task API functions
+export const taskAPI = {
+  getTasks: async (filters?: TaskFilters): Promise<TasksResponse> => {
+    const params = new URLSearchParams();
+    if (filters?.status) params.append('status', filters.status);
+    if (filters?.assigned_to) params.append('assigned_to', filters.assigned_to);
+    if (filters?.priority) params.append('priority', filters.priority);
+
+    const queryString = params.toString();
+    const url = queryString ? `/api/tasks?${queryString}` : '/api/tasks';
+    const response = await api.get<TasksResponse>(url);
+    return response.data;
+  },
+
+  getTask: async (id: string): Promise<TaskResponse> => {
+    const response = await api.get<TaskResponse>(`/api/tasks/${id}`);
+    return response.data;
+  },
+
+  createTask: async (data: CreateTaskData): Promise<TaskResponse> => {
+    const response = await api.post<TaskResponse>('/api/tasks', data);
+    return response.data;
+  },
+
+  updateTask: async (id: string, data: UpdateTaskData): Promise<TaskResponse> => {
+    const response = await api.put<TaskResponse>(`/api/tasks/${id}`, data);
+    return response.data;
+  },
+
+  deleteTask: async (id: string): Promise<{ message: string }> => {
+    const response = await api.delete<{ message: string }>(`/api/tasks/${id}`);
+    return response.data;
   },
 };
 

@@ -83,18 +83,38 @@
   margin-right: 10px;
 }
 
-.dashboard-placeholder {
-  text-align: center;
-  padding: 60px 20px;
-  color: #999;
+.dashboard-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 0 20px;
 }
 
-.dashboard-placeholder p {
-  margin: 10px 0;
-  font-size: 16px;
+.filter-btn {
+  padding: 8px 16px;
+  border: 2px solid #cbd5e1;
+  background: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #475569;
 }
 
-.placeholder-note {
-  font-size: 14px !important;
-  font-style: italic;
+.filter-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .dashboard-filters {
+    flex-wrap: wrap;
+  }
 }
