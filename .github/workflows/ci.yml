@@ -102,9 +102,28 @@ jobs:
         run: |
           echo "Verifying we're in the right directory:"
           pwd
-          ls -la node_modules/.bin/eslint || echo "ESLint binary check failed"
-          echo "Running eslint directly:"
-          node_modules/.bin/eslint src --ext .ts,.tsx
+          echo "Checking for eslint in frontend node_modules:"
+          ls -la node_modules/.bin/eslint 2>&1 || echo "Not in frontend/node_modules"
+          echo "Checking for eslint in root node_modules (workspace):"
+          ls -la ../node_modules/.bin/eslint 2>&1 || echo "Not in root/node_modules"
+          echo "Finding eslint anywhere:"
+          find .. -name "eslint.js" -path "*/node_modules/eslint/bin/*" 2>/dev/null | head -3 || echo "eslint.js not found"
+          echo "Determining eslint path:"
+          if [ -f node_modules/.bin/eslint ]; then
+            ESLINT_PATH="node_modules/.bin/eslint"
+          elif [ -f ../node_modules/.bin/eslint ]; then
+            ESLINT_PATH="../node_modules/.bin/eslint"
+          else
+            ESLINT_PATH=$(find .. -name "eslint.js" -path "*/node_modules/eslint/bin/*" 2>/dev/null | head -1)
+            if [ -z "$ESLINT_PATH" ]; then
+              echo "ERROR: Cannot find eslint anywhere!"
+              exit 1
+            fi
+          fi
+          echo "Using eslint at: $ESLINT_PATH"
+          $ESLINT_PATH --version
+          echo "Running eslint:"
+          $ESLINT_PATH src --ext .ts,.tsx
       
       - name: Lint backend
         working-directory: ./backend
