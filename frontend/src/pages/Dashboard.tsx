@@ -25,6 +25,12 @@ const Dashboard: React.FC = () => {
         <h1>TaskManager</h1>
         <div className="user-info">
           <span>Welcome, {user?.name}</span>
+          <button
+            onClick={() => navigate('/profile')}
+            className="profile-button"
+          >
+            Profile
+          </button>
           <button onClick={handleLogout} className="logout-button">
             Logout
           </button>

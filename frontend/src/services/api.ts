@@ -114,11 +114,11 @@ export interface Task {
 
 export interface CreateTaskData {
   title: string;
-  description?: string;
-  status?: 'todo' | 'in-progress' | 'done';
+  description: string;
+  status: 'todo' | 'in-progress' | 'done';
   assigned_to?: string;
-  due_date?: string;
-  priority?: 'low' | 'medium' | 'high';
+  due_date: string;
+  priority: 'low' | 'medium' | 'high';
 }
 
 export interface UpdateTaskData {
@@ -167,6 +167,16 @@ export const authAPI = {
 
   getMe: async (): Promise<{ user: User }> => {
     const response = await api.get<{ user: User }>('/api/auth/me');
+    return response.data;
+  },
+
+  updateProfile: async (
+    data: { name?: string; email?: string }
+  ): Promise<{ message: string; user: User }> => {
+    const response = await api.put<{ message: string; user: User }>(
+      '/api/auth/profile',
+      data
+    );
     return response.data;
   },
 

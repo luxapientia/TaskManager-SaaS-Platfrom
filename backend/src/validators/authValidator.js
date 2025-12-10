@@ -26,7 +26,22 @@ const loginValidator = [
   body('password').notEmpty().withMessage('Password is required'),
 ];
 
+const updateProfileValidator = [
+  body('email')
+    .optional()
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Name must be between 2 and 255 characters'),
+];
+
 module.exports = {
   registerValidator,
   loginValidator,
+  updateProfileValidator,
 };
+

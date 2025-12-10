@@ -13,6 +13,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
+  updateProfile: (data: { name?: string; email?: string }) => Promise<void>;
   logout: () => void;
 }
 
@@ -85,6 +86,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateProfile = async (
+    data: { name?: string; email?: string }
+  ): Promise<void> => {
+    try {
+      const response = await authAPI.updateProfile(data);
+      setUser(response.user);
+    } catch (error: any) {
+      throw new Error(
+        error.response?.data?.error || 'Failed to update profile'
+      );
+    }
+  };
+
   const logout = (): void => {
     authAPI.logout();
     setUser(null);
@@ -96,6 +110,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     login,
     register,
+    updateProfile,
     logout,
   };
 

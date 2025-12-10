@@ -31,12 +31,12 @@ class Task {
     `;
     const values = [
       title,
-      description || null,
-      status || 'todo',
+      description,
+      status,
       user_id,
       assigned_to || null,
-      due_date || null,
-      priority || 'medium',
+      due_date,
+      priority,
     ];
 
     try {
