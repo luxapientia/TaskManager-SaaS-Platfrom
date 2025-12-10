@@ -48,82 +48,26 @@ jobs:
             frontend/package-lock.json
             backend/package-lock.json
       
-      - name: Install frontend dependencies
-        working-directory: ./frontend
+      - name: Install dependencies
         env:
           NODE_ENV: development
         run: |
           set -e
           echo "Environment: NODE_ENV=$NODE_ENV"
-          echo "Checking npm and node versions:"
-          npm --version
-          node --version
-          echo "Installing frontend dependencies..."
+          echo "Installing all workspace dependencies at root..."
           npm install --no-audit --no-fund
-          echo "Checking node_modules structure:"
-          ls -la node_modules 2>&1 | head -10
-          echo "Checking if node_modules/.bin exists:"
-          test -d node_modules/.bin && echo "node_modules/.bin exists" || echo "node_modules/.bin MISSING!"
-          echo "Listing all binaries in node_modules/.bin:"
-          ls -la node_modules/.bin/ 2>&1 | head -20 || echo "Cannot list node_modules/.bin"
-          echo "Checking for eslint:"
-          find node_modules -name "eslint" -type f 2>/dev/null | head -5 || echo "No eslint executable found"
-          echo "Checking eslint package:"
-          test -d node_modules/eslint && echo "eslint package directory exists" || echo "eslint package MISSING"
-          echo "Checking eslint binary explicitly:"
-          if [ -f node_modules/.bin/eslint ] || [ -L node_modules/.bin/eslint ]; then
-            echo "ESLint binary found!"
-            ls -la node_modules/.bin/eslint
-          else
-            echo "ERROR: ESLint binary is missing!"
-            echo "Attempting to rebuild binaries..."
-            npm rebuild || true
-            echo "Checking again after rebuild:"
-            ls -la node_modules/.bin/eslint 2>&1 || echo "Still missing after rebuild"
-            echo "Trying explicit reinstall..."
-            npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
-            echo "Checking package.json bin field:"
-            cat node_modules/eslint/package.json | grep -A 5 '"bin"' || echo "No bin field found"
-            echo "Final check:"
-            ls -la node_modules/.bin/eslint 2>&1 || (echo "ESLint binary STILL missing! This is a critical error." && exit 1)
-          fi
-          echo "Testing eslint binary:"
-          node_modules/.bin/eslint --version
-          echo "ESLint verified successfully"
-      
-      - name: Install backend dependencies
-        working-directory: ./backend
-        run: |
-          echo "Installing backend dependencies..."
-          npm ci --no-audit
+          echo "Verifying eslint installation:"
+          npm list eslint --workspace=frontend || echo "eslint not found in frontend workspace"
+          echo "Verifying eslint-config-react-app:"
+          npm list eslint-config-react-app --workspace=frontend || echo "eslint-config-react-app not found"
+          echo "Checking eslint binary in frontend:"
+          ls -la frontend/node_modules/.bin/eslint 2>&1 || echo "Not in frontend/node_modules"
+          ls -la node_modules/.bin/eslint 2>&1 || echo "Not in root node_modules"
+          echo "ESLint installation complete"
       
       - name: Lint frontend
         working-directory: ./frontend
-        run: |
-          echo "Verifying we're in the right directory:"
-          pwd
-          echo "Checking for eslint in frontend node_modules:"
-          ls -la node_modules/.bin/eslint 2>&1 || echo "Not in frontend/node_modules"
-          echo "Checking for eslint in root node_modules (workspace):"
-          ls -la ../node_modules/.bin/eslint 2>&1 || echo "Not in root/node_modules"
-          echo "Finding eslint anywhere:"
-          find .. -name "eslint.js" -path "*/node_modules/eslint/bin/*" 2>/dev/null | head -3 || echo "eslint.js not found"
-          echo "Determining eslint path:"
-          if [ -f node_modules/.bin/eslint ]; then
-            ESLINT_PATH="node_modules/.bin/eslint"
-          elif [ -f ../node_modules/.bin/eslint ]; then
-            ESLINT_PATH="../node_modules/.bin/eslint"
-          else
-            ESLINT_PATH=$(find .. -name "eslint.js" -path "*/node_modules/eslint/bin/*" 2>/dev/null | head -1)
-            if [ -z "$ESLINT_PATH" ]; then
-              echo "ERROR: Cannot find eslint anywhere!"
-              exit 1
-            fi
-          fi
-          echo "Using eslint at: $ESLINT_PATH"
-          $ESLINT_PATH --version
-          echo "Running eslint:"
-          $ESLINT_PATH src --ext .ts,.tsx
+        run: npm run lint
       
       - name: Lint backend
         working-directory: ./backend
