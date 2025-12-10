@@ -51,17 +51,13 @@ jobs:
         working-directory: ./frontend
         run: npm install
       
-      - name: Verify eslint installation
-        working-directory: ./frontend
-        run: npx eslint --version
-      
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci --prefer-offline --no-audit
       
       - name: Lint frontend
         working-directory: ./frontend
-        run: npx eslint src --ext .ts,.tsx
+        run: npm run lint
       
       - name: Lint backend
         working-directory: ./backend
