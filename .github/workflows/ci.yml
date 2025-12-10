@@ -49,20 +49,11 @@ jobs:
       
       - name: Install frontend dependencies
         working-directory: ./frontend
-        run: |
-          set -e  # Exit on any error
-          if ! npm ci; then
-            echo "npm ci failed, trying npm install..."
-            npm install
-          fi
-          # Verify eslint is installed
-          if [ ! -f node_modules/.bin/eslint ]; then
-            echo "ESLint not found in node_modules, installing..."
-            npm install eslint --save-dev
-          fi
-          # Verify installation
-          npx eslint --version || (echo "ESLint verification failed" && exit 1)
-          echo "Frontend dependencies installed successfully"
+        run: npm install
+      
+      - name: Verify eslint installation
+        working-directory: ./frontend
+        run: npx eslint --version
       
       - name: Install backend dependencies
         working-directory: ./backend
