@@ -53,14 +53,16 @@ jobs:
         env:
           NODE_ENV: development
         run: |
+          echo "Installing dependencies..."
           npm install --no-audit --no-fund
-          # Ensure eslint is installed
-          if ! command -v ./node_modules/.bin/eslint &> /dev/null; then
-            echo "ESLint not found, installing..."
-            npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
-          fi
-          # Verify eslint works
-          ./node_modules/.bin/eslint --version
+          echo "Checking for eslint..."
+          ls -la node_modules/.bin/eslint || echo "ESLint binary not found"
+          # Always ensure eslint is installed
+          npm list eslint 2>/dev/null || npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
+          # Verify eslint binary exists and works
+          test -f node_modules/.bin/eslint && echo "ESLint binary found" || (echo "ESLint binary missing!" && exit 1)
+          ./node_modules/.bin/eslint --version || (echo "ESLint verification failed!" && exit 1)
+          echo "ESLint installation verified successfully"
       
       - name: Install backend dependencies
         working-directory: ./backend
