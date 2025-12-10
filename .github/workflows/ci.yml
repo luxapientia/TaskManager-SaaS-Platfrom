@@ -50,8 +50,19 @@ jobs:
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: |
-          npm ci || npm install
-          npx eslint --version || echo "ESLint check failed"
+          set -e  # Exit on any error
+          if ! npm ci; then
+            echo "npm ci failed, trying npm install..."
+            npm install
+          fi
+          # Verify eslint is installed
+          if [ ! -f node_modules/.bin/eslint ]; then
+            echo "ESLint not found in node_modules, installing..."
+            npm install eslint --save-dev
+          fi
+          # Verify installation
+          npx eslint --version || (echo "ESLint verification failed" && exit 1)
+          echo "Frontend dependencies installed successfully"
       
       - name: Install backend dependencies
         working-directory: ./backend
@@ -59,7 +70,7 @@ jobs:
       
       - name: Lint frontend
         working-directory: ./frontend
-        run: npm run lint
+        run: npx eslint src --ext .ts,.tsx
       
       - name: Lint backend
         working-directory: ./backend
