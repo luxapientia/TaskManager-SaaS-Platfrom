@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { taskAPI, Task, TaskFilters } from '../services/api';
 import TaskItem from './TaskItem';
 import TaskForm from './TaskForm';
@@ -15,11 +15,7 @@ const TaskList: React.FC<TaskListProps> = ({ filters }) => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  useEffect(() => {
-    loadTasks();
-  }, [filters]);
-
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -30,7 +26,11 @@ const TaskList: React.FC<TaskListProps> = ({ filters }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
 
   const handleCreateTask = async (taskData: any) => {
     try {

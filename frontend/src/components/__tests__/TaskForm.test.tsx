@@ -185,10 +185,20 @@ describe('TaskForm', () => {
 
     await waitFor(() => {
       expect(screen.getByLabelText('Title *')).toBeDisabled();
+    });
+    await waitFor(() => {
       expect(screen.getByLabelText('Description')).toBeDisabled();
+    });
+    await waitFor(() => {
       expect(screen.getByLabelText('Status')).toBeDisabled();
+    });
+    await waitFor(() => {
       expect(screen.getByLabelText('Priority')).toBeDisabled();
+    });
+    await waitFor(() => {
       expect(screen.getByLabelText('Due Date')).toBeDisabled();
+    });
+    await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled();
     });
   });

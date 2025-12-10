@@ -186,9 +186,8 @@ describe('TaskList', () => {
     });
 
     // Find the status select for the first task
-    const statusLabels = screen.getAllByText('Status:');
-    const statusSelect = statusLabels[0].nextElementSibling as HTMLSelectElement;
-    fireEvent.change(statusSelect, { target: { value: 'done' } });
+    const statusSelects = screen.getAllByRole('combobox', { name: /status/i });
+    fireEvent.change(statusSelects[0], { target: { value: 'done' } });
 
     await waitFor(() => {
       expect(api.taskAPI.updateTask).toHaveBeenCalledWith('1', { status: 'done' });
@@ -213,8 +212,8 @@ describe('TaskList', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Edit Task')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('Test Task 1')).toBeInTheDocument();
     });
+    expect(screen.getByDisplayValue('Test Task 1')).toBeInTheDocument();
 
     // Update title
     fireEvent.change(screen.getByLabelText('Title *'), {
@@ -247,9 +246,10 @@ describe('TaskList', () => {
     fireEvent.click(deleteButtons[0]);
 
     await waitFor(() => {
-      expect(api.taskAPI.deleteTask).toHaveBeenCalledWith('1');
-      expect(api.taskAPI.getTasks).toHaveBeenCalledTimes(2); // Initial load + reload after delete
+      expect(api.taskAPI.deleteTask).toHaveBeenCalled();
     });
+    expect(api.taskAPI.deleteTask).toHaveBeenCalledWith('1');
+    expect(api.taskAPI.getTasks).toHaveBeenCalledTimes(2); // Initial load + reload after delete
   });
 
   test('does not delete task if user cancels confirmation', async () => {

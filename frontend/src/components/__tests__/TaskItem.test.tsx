@@ -37,7 +37,7 @@ describe('TaskItem', () => {
 
     expect(screen.getByText('Test Task')).toBeInTheDocument();
     expect(screen.getByText('Test Description')).toBeInTheDocument();
-    const statusSelect = screen.getByText('Status:').nextElementSibling as HTMLSelectElement;
+    const statusSelect = screen.getByRole('combobox', { name: /status/i });
     expect(statusSelect).toHaveValue('todo');
     expect(screen.getByText('medium')).toBeInTheDocument();
     expect(screen.getByText(/12\/31\/2024/)).toBeInTheDocument(); // Date format may vary
@@ -115,7 +115,7 @@ describe('TaskItem', () => {
       />
     );
 
-    const statusSelect = screen.getByText('Status:').nextElementSibling as HTMLSelectElement;
+    const statusSelect = screen.getByRole('combobox', { name: /status/i });
     fireEvent.change(statusSelect, { target: { value: 'done' } });
 
     expect(mockOnStatusChange).toHaveBeenCalledTimes(1);
@@ -123,7 +123,7 @@ describe('TaskItem', () => {
   });
 
   test('applies correct status class', () => {
-    const { container } = render(
+    render(
       <TaskItem
         task={mockTask}
         onEdit={mockOnEdit}
@@ -132,13 +132,13 @@ describe('TaskItem', () => {
       />
     );
 
-    const taskItem = container.querySelector('.task-item');
+    const taskItem = screen.getByTestId('task-item');
     expect(taskItem).toHaveClass('status-todo');
   });
 
   test('applies correct priority class for high priority', () => {
     const highPriorityTask = { ...mockTask, priority: 'high' as const };
-    const { container } = render(
+    render(
       <TaskItem
         task={highPriorityTask}
         onEdit={mockOnEdit}
@@ -147,13 +147,13 @@ describe('TaskItem', () => {
       />
     );
 
-    const priorityElement = container.querySelector('.priority-high');
-    expect(priorityElement).toBeInTheDocument();
+    const priorityElement = screen.getByTestId('task-priority');
+    expect(priorityElement).toHaveClass('priority-high');
   });
 
   test('applies correct priority class for low priority', () => {
     const lowPriorityTask = { ...mockTask, priority: 'low' as const };
-    const { container } = render(
+    render(
       <TaskItem
         task={lowPriorityTask}
         onEdit={mockOnEdit}
@@ -162,8 +162,8 @@ describe('TaskItem', () => {
       />
     );
 
-    const priorityElement = container.querySelector('.priority-low');
-    expect(priorityElement).toBeInTheDocument();
+    const priorityElement = screen.getByTestId('task-priority');
+    expect(priorityElement).toHaveClass('priority-low');
   });
 
   test('displays all status options', () => {
@@ -176,10 +176,10 @@ describe('TaskItem', () => {
       />
     );
 
-    const statusSelect = screen.getByText('Status:').nextElementSibling as HTMLSelectElement;
+    const statusSelect = screen.getByRole('combobox', { name: /status/i });
     expect(statusSelect).toBeInTheDocument();
 
-    const options = Array.from(statusSelect.querySelectorAll('option')).map(
+    const options = Array.from((statusSelect as HTMLSelectElement).options).map(
       (opt) => opt.textContent
     );
     expect(options).toContain('Todo');
@@ -189,7 +189,7 @@ describe('TaskItem', () => {
 
   test('handles in-progress status', () => {
     const inProgressTask = { ...mockTask, status: 'in-progress' as const };
-    const { container } = render(
+    render(
       <TaskItem
         task={inProgressTask}
         onEdit={mockOnEdit}
@@ -198,15 +198,15 @@ describe('TaskItem', () => {
       />
     );
 
-    const taskItem = container.querySelector('.task-item');
+    const taskItem = screen.getByTestId('task-item');
     expect(taskItem).toHaveClass('status-in-progress');
-    const statusSelect = screen.getByText('Status:').nextElementSibling as HTMLSelectElement;
+    const statusSelect = screen.getByRole('combobox', { name: /status/i });
     expect(statusSelect).toHaveValue('in-progress');
   });
 
   test('handles done status', () => {
     const doneTask = { ...mockTask, status: 'done' as const };
-    const { container } = render(
+    render(
       <TaskItem
         task={doneTask}
         onEdit={mockOnEdit}
@@ -215,9 +215,9 @@ describe('TaskItem', () => {
       />
     );
 
-    const taskItem = container.querySelector('.task-item');
+    const taskItem = screen.getByTestId('task-item');
     expect(taskItem).toHaveClass('status-done');
-    const statusSelect = screen.getByText('Status:').nextElementSibling as HTMLSelectElement;
+    const statusSelect = screen.getByRole('combobox', { name: /status/i });
     expect(statusSelect).toHaveValue('done');
   });
 });

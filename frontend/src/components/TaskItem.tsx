@@ -42,7 +42,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onStatusCha
   };
 
   return (
-    <div className={`task-item ${getStatusClass(task.status)}`}>
+    <div className={`task-item ${getStatusClass(task.status)}`} data-testid="task-item">
       <div className="task-item-header">
         <h3 className="task-title">{task.title}</h3>
         <div className="task-actions">
@@ -71,7 +71,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onStatusCha
           </select>
         </div>
 
-        <div className={`task-priority ${getPriorityClass(task.priority)}`}>
+        <div className={`task-priority ${getPriorityClass(task.priority)}`} data-testid="task-priority">
           <span className="priority-label">Priority:</span>
           <span className="priority-value">{task.priority}</span>
         </div>

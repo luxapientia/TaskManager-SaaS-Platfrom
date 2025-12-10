@@ -7,7 +7,6 @@ const { randomUUID } = require('crypto');
 describe('TaskService', () => {
   let testUser1;
   let testUser2;
-  let testTask;
 
   beforeAll(async () => {
     // Create tasks table if it doesn't exist
@@ -76,7 +75,6 @@ describe('TaskService', () => {
       };
 
       const task = await taskService.createTask(taskData, testUser1.id);
-      testTask = task;
 
       expect(task).toBeDefined();
       expect(task.title).toBe(taskData.title);

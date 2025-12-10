@@ -130,7 +130,7 @@ class Task {
     let paramCount = 1;
 
     for (const field of allowedFields) {
-      if (updates.hasOwnProperty(field)) {
+      if (Object.prototype.hasOwnProperty.call(updates, field)) {
         updateFields.push(`${field} = $${paramCount}`);
         values.push(updates[field]);
         paramCount++;

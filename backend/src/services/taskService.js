@@ -1,6 +1,5 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
-const logger = require('../utils/logger');
 
 class TaskService {
   async createTask(taskData, userId) {
