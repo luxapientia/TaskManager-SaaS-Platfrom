@@ -98,18 +98,18 @@ describe('JWT Utils', () => {
     test('should use fallback secret when JWT_SECRET is not set', () => {
       // Remove JWT_SECRET to test fallback (line 5 in jwt.js)
       delete process.env.JWT_SECRET;
-      
+
       // Clear module cache to reload with new env
       jest.resetModules();
-      
+
       // Reload the module - this will use the fallback value 'your-secret-key-change-in-production'
       const jwtUtils = require('../utils/jwt');
-      
+
       // Generate a token with the fallback secret
       const token = jwtUtils.generateToken(payload);
       expect(token).toBeDefined();
       expect(typeof token).toBe('string');
-      
+
       // Verify the token can be verified (proving fallback was used)
       const decoded = jwtUtils.verifyToken(token);
       expect(decoded.userId).toBe(payload.userId);

@@ -84,7 +84,9 @@ describe('TaskList', () => {
     render(<TaskList />);
 
     await waitFor(() => {
-      expect(screen.getByText('No tasks found. Create your first task!')).toBeInTheDocument();
+      expect(
+        screen.getByText('No tasks found. Create your first task!')
+      ).toBeInTheDocument();
     });
   });
 
@@ -190,7 +192,9 @@ describe('TaskList', () => {
     fireEvent.change(statusSelects[0], { target: { value: 'done' } });
 
     await waitFor(() => {
-      expect(api.taskAPI.updateTask).toHaveBeenCalledWith('1', { status: 'done' });
+      expect(api.taskAPI.updateTask).toHaveBeenCalledWith('1', {
+        status: 'done',
+      });
     });
   });
 
@@ -224,9 +228,12 @@ describe('TaskList', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Update Task' }));
 
     await waitFor(() => {
-      expect(api.taskAPI.updateTask).toHaveBeenCalledWith('1', expect.objectContaining({
-        title: 'Updated Task',
-      }));
+      expect(api.taskAPI.updateTask).toHaveBeenCalledWith(
+        '1',
+        expect.objectContaining({
+          title: 'Updated Task',
+        })
+      );
     });
   });
 
@@ -320,4 +327,3 @@ describe('TaskList', () => {
     });
   });
 });
-

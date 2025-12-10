@@ -37,7 +37,7 @@ class TaskService {
   async getTasks(userId, filters = {}) {
     // Get tasks created by user
     const createdTasks = await Task.findByUserId(userId, filters);
-    
+
     // Get tasks assigned to user
     const assignedTasks = await Task.findByAssignedTo(userId, filters);
 
@@ -95,4 +95,3 @@ class TaskService {
 }
 
 module.exports = new TaskService();
-

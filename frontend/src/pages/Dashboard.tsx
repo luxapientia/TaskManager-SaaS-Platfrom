@@ -8,9 +8,9 @@ import './Dashboard.css';
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [statusFilter, setStatusFilter] = useState<'todo' | 'in-progress' | 'done' | undefined>(
-    undefined
-  );
+  const [statusFilter, setStatusFilter] = useState<
+    'todo' | 'in-progress' | 'done' | undefined
+  >(undefined);
 
   const handleLogout = () => {
     logout();

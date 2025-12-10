@@ -245,16 +245,16 @@ describe('Task API', () => {
         .expect(200);
 
       expect(response.body.tasks.length).toBeGreaterThanOrEqual(1);
-      expect(response.body.tasks.every((t) => t.priority === 'high')).toBe(true);
+      expect(response.body.tasks.every((t) => t.priority === 'high')).toBe(
+        true
+      );
 
       // Clean up
       await task.delete();
     });
 
     test('should reject request without authentication', async () => {
-      const response = await request(app)
-        .get('/api/tasks')
-        .expect(401);
+      const response = await request(app).get('/api/tasks').expect(401);
 
       expect(response.body).toHaveProperty('error');
     });
@@ -298,7 +298,10 @@ describe('Task API', () => {
         name: 'Unauthorized User',
       });
 
-      const unauthorizedToken = generateToken({ userId: unauthorizedUser.id, email: unauthorizedUser.email });
+      const unauthorizedToken = generateToken({
+        userId: unauthorizedUser.id,
+        email: unauthorizedUser.email,
+      });
 
       const task = await Task.create({
         title: 'Unauthorized Task',
@@ -373,12 +376,10 @@ describe('Task API', () => {
         name: 'Unauthorized User',
       });
 
-      const loginResponse = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: unauthorizedUser.email,
-          password: 'Test1234',
-        });
+      const loginResponse = await request(app).post('/api/auth/login').send({
+        email: unauthorizedUser.email,
+        password: 'Test1234',
+      });
 
       const unauthorizedToken = loginResponse.body.token;
 
@@ -406,7 +407,10 @@ describe('Task API', () => {
         user_id: testUser.id,
       });
 
-      const assignedUserToken = generateToken({ userId: testUser2.id, email: testUser2.email });
+      const assignedUserToken = generateToken({
+        userId: testUser2.id,
+        email: testUser2.email,
+      });
 
       const response = await request(app)
         .put(`/api/tasks/${task.id}`)
@@ -477,12 +481,10 @@ describe('Task API', () => {
         name: 'Unauthorized User',
       });
 
-      const loginResponse = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: unauthorizedUser.email,
-          password: 'Test1234',
-        });
+      const loginResponse = await request(app).post('/api/auth/login').send({
+        email: unauthorizedUser.email,
+        password: 'Test1234',
+      });
 
       const unauthorizedToken = loginResponse.body.token;
 
@@ -503,9 +505,9 @@ describe('Task API', () => {
     });
 
     test('should return 500 on unexpected error in createTask', async () => {
-      const createTaskSpy = jest.spyOn(taskService, 'createTask').mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      const createTaskSpy = jest
+        .spyOn(taskService, 'createTask')
+        .mockRejectedValue(new Error('Database connection failed'));
 
       const response = await request(app)
         .post('/api/tasks')
@@ -520,9 +522,9 @@ describe('Task API', () => {
     });
 
     test('should return 500 on unexpected error in getTasks', async () => {
-      const getTasksSpy = jest.spyOn(taskService, 'getTasks').mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      const getTasksSpy = jest
+        .spyOn(taskService, 'getTasks')
+        .mockRejectedValue(new Error('Database connection failed'));
 
       const response = await request(app)
         .get('/api/tasks')
@@ -541,9 +543,9 @@ describe('Task API', () => {
         user_id: testUser.id,
       });
 
-      const getTaskByIdSpy = jest.spyOn(taskService, 'getTaskById').mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      const getTaskByIdSpy = jest
+        .spyOn(taskService, 'getTaskById')
+        .mockRejectedValue(new Error('Database connection failed'));
 
       const response = await request(app)
         .get(`/api/tasks/${task.id}`)
@@ -565,9 +567,9 @@ describe('Task API', () => {
         user_id: testUser.id,
       });
 
-      const updateTaskSpy = jest.spyOn(taskService, 'updateTask').mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      const updateTaskSpy = jest
+        .spyOn(taskService, 'updateTask')
+        .mockRejectedValue(new Error('Database connection failed'));
 
       const response = await request(app)
         .put(`/api/tasks/${task.id}`)
@@ -590,9 +592,9 @@ describe('Task API', () => {
         user_id: testUser.id,
       });
 
-      const deleteTaskSpy = jest.spyOn(taskService, 'deleteTask').mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      const deleteTaskSpy = jest
+        .spyOn(taskService, 'deleteTask')
+        .mockRejectedValue(new Error('Database connection failed'));
 
       const response = await request(app)
         .delete(`/api/tasks/${task.id}`)
@@ -609,5 +611,3 @@ describe('Task API', () => {
     });
   });
 });
-
-

@@ -98,7 +98,11 @@ const TaskList: React.FC<TaskListProps> = ({ filters }) => {
       {showForm && (
         <TaskForm
           task={editingTask}
-          onSubmit={editingTask ? (data) => handleUpdateTask(editingTask.id, data) : handleCreateTask}
+          onSubmit={
+            editingTask
+              ? (data) => handleUpdateTask(editingTask.id, data)
+              : handleCreateTask
+          }
           onCancel={handleCancelForm}
         />
       )}
@@ -123,4 +127,3 @@ const TaskList: React.FC<TaskListProps> = ({ filters }) => {
 };
 
 export default TaskList;
-

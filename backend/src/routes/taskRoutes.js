@@ -29,4 +29,3 @@ router.put('/:id', updateTaskValidator, taskController.updateTask);
 router.delete('/:id', deleteTaskValidator, taskController.deleteTask);
 
 module.exports = router;
-

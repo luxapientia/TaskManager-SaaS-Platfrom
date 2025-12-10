@@ -14,7 +14,7 @@ describe('Logger Configuration', () => {
   test('should add file transports in production', () => {
     // Save original NODE_ENV
     const originalNodeEnv = process.env.NODE_ENV;
-    
+
     // Use jest.isolateModules to ensure fresh module load
     jest.isolateModules(() => {
       // Set production environment BEFORE requiring logger
@@ -32,7 +32,7 @@ describe('Logger Configuration', () => {
       );
       expect(fileTransports.length).toBe(2); // error.log and combined.log
     });
-    
+
     // Restore original NODE_ENV
     process.env.NODE_ENV = originalNodeEnv;
   });

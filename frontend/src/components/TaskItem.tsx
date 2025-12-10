@@ -9,7 +9,12 @@ interface TaskItemProps {
   onStatusChange: (status: 'todo' | 'in-progress' | 'done') => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onStatusChange }) => {
+const TaskItem: React.FC<TaskItemProps> = ({
+  task,
+  onEdit,
+  onDelete,
+  onStatusChange,
+}) => {
   const getStatusClass = (status: string) => {
     switch (status) {
       case 'todo':
@@ -42,27 +47,40 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onStatusCha
   };
 
   return (
-    <div className={`task-item ${getStatusClass(task.status)}`} data-testid="task-item">
+    <div
+      className={`task-item ${getStatusClass(task.status)}`}
+      data-testid="task-item"
+    >
       <div className="task-item-header">
         <h3 className="task-title">{task.title}</h3>
         <div className="task-actions">
-          <button className="btn btn-sm btn-secondary" onClick={() => onEdit(task)}>
+          <button
+            className="btn btn-sm btn-secondary"
+            onClick={() => onEdit(task)}
+          >
             Edit
           </button>
-          <button className="btn btn-sm btn-danger" onClick={() => onDelete(task.id)}>
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() => onDelete(task.id)}
+          >
             Delete
           </button>
         </div>
       </div>
 
-      {task.description && <p className="task-description">{task.description}</p>}
+      {task.description && (
+        <p className="task-description">{task.description}</p>
+      )}
 
       <div className="task-meta">
         <div className="task-status">
           <label>Status:</label>
           <select
             value={task.status}
-            onChange={(e) => onStatusChange(e.target.value as 'todo' | 'in-progress' | 'done')}
+            onChange={(e) =>
+              onStatusChange(e.target.value as 'todo' | 'in-progress' | 'done')
+            }
             className={`status-select ${getStatusClass(task.status)}`}
           >
             <option value="todo">Todo</option>
@@ -71,7 +89,10 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onStatusCha
           </select>
         </div>
 
-        <div className={`task-priority ${getPriorityClass(task.priority)}`} data-testid="task-priority">
+        <div
+          className={`task-priority ${getPriorityClass(task.priority)}`}
+          data-testid="task-priority"
+        >
           <span className="priority-label">Priority:</span>
           <span className="priority-value">{task.priority}</span>
         </div>
@@ -88,4 +109,3 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onStatusCha
 };
 
 export default TaskItem;
-

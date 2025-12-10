@@ -200,7 +200,10 @@ export const taskAPI = {
     return response.data;
   },
 
-  updateTask: async (id: string, data: UpdateTaskData): Promise<TaskResponse> => {
+  updateTask: async (
+    id: string,
+    data: UpdateTaskData
+  ): Promise<TaskResponse> => {
     const response = await api.put<TaskResponse>(`/api/tasks/${id}`, data);
     return response.data;
   },

@@ -7,7 +7,9 @@ describe('Task Model Error Handling', () => {
     test('should throw error on database failure', async () => {
       // Mock pool.query to throw an error
       const originalQuery = pool.query;
-      pool.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      pool.query = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
       await expect(
         Task.create({
@@ -35,11 +37,13 @@ describe('Task Model Error Handling', () => {
 
       // Mock pool.query to throw an error
       const originalQuery = pool.query;
-      pool.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      pool.query = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
-      await expect(
-        task.update({ title: 'Updated Task' })
-      ).rejects.toThrow('Database connection failed');
+      await expect(task.update({ title: 'Updated Task' })).rejects.toThrow(
+        'Database connection failed'
+      );
 
       // Restore original query
       pool.query = originalQuery;
@@ -50,9 +54,13 @@ describe('Task Model Error Handling', () => {
     test('should throw error on database failure', async () => {
       // Mock pool.query to throw an error
       const originalQuery = pool.query;
-      pool.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      pool.query = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
-      await expect(Task.findById(randomUUID())).rejects.toThrow('Database connection failed');
+      await expect(Task.findById(randomUUID())).rejects.toThrow(
+        'Database connection failed'
+      );
 
       // Restore original query
       pool.query = originalQuery;
@@ -63,9 +71,13 @@ describe('Task Model Error Handling', () => {
     test('should throw error on database failure', async () => {
       // Mock pool.query to throw an error
       const originalQuery = pool.query;
-      pool.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      pool.query = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
-      await expect(Task.findByUserId(randomUUID())).rejects.toThrow('Database connection failed');
+      await expect(Task.findByUserId(randomUUID())).rejects.toThrow(
+        'Database connection failed'
+      );
 
       // Restore original query
       pool.query = originalQuery;
@@ -76,9 +88,13 @@ describe('Task Model Error Handling', () => {
     test('should throw error on database failure', async () => {
       // Mock pool.query to throw an error
       const originalQuery = pool.query;
-      pool.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      pool.query = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
-      await expect(Task.findByAssignedTo(randomUUID())).rejects.toThrow('Database connection failed');
+      await expect(Task.findByAssignedTo(randomUUID())).rejects.toThrow(
+        'Database connection failed'
+      );
 
       // Restore original query
       pool.query = originalQuery;
@@ -115,11 +131,13 @@ describe('Task Model Error Handling', () => {
 
       // Mock pool.query to throw an error
       const originalQuery = pool.query;
-      pool.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      pool.query = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
-      await expect(
-        task.update({ title: 'Updated Task' })
-      ).rejects.toThrow('Database connection failed');
+      await expect(task.update({ title: 'Updated Task' })).rejects.toThrow(
+        'Database connection failed'
+      );
 
       // Restore original query
       pool.query = originalQuery;
@@ -162,7 +180,9 @@ describe('Task Model Error Handling', () => {
 
       // Mock pool.query to throw an error
       const originalQuery = pool.query;
-      pool.query = jest.fn().mockRejectedValue(new Error('Database connection failed'));
+      pool.query = jest
+        .fn()
+        .mockRejectedValue(new Error('Database connection failed'));
 
       await expect(task.delete()).rejects.toThrow('Database connection failed');
 
@@ -171,7 +191,3 @@ describe('Task Model Error Handling', () => {
     });
   });
 });
-
-
-
-

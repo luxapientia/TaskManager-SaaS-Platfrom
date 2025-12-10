@@ -30,13 +30,3 @@ module.exports = {
   registerValidator,
   loginValidator,
 };
-
-
-
-
-
-
-
-
-
-

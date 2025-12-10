@@ -34,20 +34,36 @@ describe('TaskForm', () => {
     expect(screen.getByLabelText('Status')).toBeInTheDocument();
     expect(screen.getByLabelText('Priority')).toBeInTheDocument();
     expect(screen.getByLabelText('Due Date')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Create Task' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Create Task' })
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
   });
 
   test('renders edit form when task provided', () => {
-    render(<TaskForm task={mockTask} onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
+    render(
+      <TaskForm
+        task={mockTask}
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />
+    );
 
     expect(screen.getByText('Edit Task')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Existing Task')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Existing Description')).toBeInTheDocument();
-    expect(screen.getByRole('combobox', { name: /status/i })).toHaveValue('in-progress');
-    expect(screen.getByRole('combobox', { name: /priority/i })).toHaveValue('high');
+    expect(
+      screen.getByDisplayValue('Existing Description')
+    ).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /status/i })).toHaveValue(
+      'in-progress'
+    );
+    expect(screen.getByRole('combobox', { name: /priority/i })).toHaveValue(
+      'high'
+    );
     expect(screen.getByDisplayValue('2024-12-31')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Update Task' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Update Task' })
+    ).toBeInTheDocument();
   });
 
   test('submits form with correct data for new task', async () => {
@@ -83,7 +99,13 @@ describe('TaskForm', () => {
   });
 
   test('submits form with correct data for edit', async () => {
-    render(<TaskForm task={mockTask} onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
+    render(
+      <TaskForm
+        task={mockTask}
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />
+    );
 
     fireEvent.change(screen.getByLabelText('Title *'), {
       target: { value: 'Updated Task' },
@@ -217,10 +239,17 @@ describe('TaskForm', () => {
 
     expect(screen.getByLabelText('Title *')).toHaveValue('');
 
-    rerender(<TaskForm task={mockTask} onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
+    rerender(
+      <TaskForm
+        task={mockTask}
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />
+    );
 
     expect(screen.getByDisplayValue('Existing Task')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Existing Description')).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue('Existing Description')
+    ).toBeInTheDocument();
   });
 });
-

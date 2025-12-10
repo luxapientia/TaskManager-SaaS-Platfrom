@@ -42,7 +42,7 @@ describe('TaskService', () => {
     // Recreate test users before each test (since setup.js truncates users after each test)
     const uniqueEmail1 = `test-${Date.now()}-${randomUUID()}@example.com`;
     const uniqueEmail2 = `test-${Date.now()}-${randomUUID()}@example.com`;
-    
+
     testUser1 = await User.create({
       email: uniqueEmail1,
       password: 'Test1234',
@@ -214,7 +214,9 @@ describe('TaskService', () => {
         testUser1.id
       );
 
-      const tasks = await taskService.getTasks(testUser1.id, { status: 'done' });
+      const tasks = await taskService.getTasks(testUser1.id, {
+        status: 'done',
+      });
 
       expect(tasks.length).toBeGreaterThanOrEqual(1);
       expect(tasks.some((t) => t.id === task2.id)).toBe(true);
@@ -235,7 +237,9 @@ describe('TaskService', () => {
         testUser1.id
       );
 
-      const tasks = await taskService.getTasks(testUser1.id, { priority: 'high' });
+      const tasks = await taskService.getTasks(testUser1.id, {
+        priority: 'high',
+      });
 
       expect(tasks.length).toBeGreaterThanOrEqual(1);
       expect(tasks.some((t) => t.id === task1.id)).toBe(true);
@@ -262,7 +266,9 @@ describe('TaskService', () => {
 
       // Use Task.findByUserId directly to test the assigned_to filter
       const Task = require('../models/Task');
-      const tasks = await Task.findByUserId(testUser1.id, { assigned_to: testUser2.id });
+      const tasks = await Task.findByUserId(testUser1.id, {
+        assigned_to: testUser2.id,
+      });
 
       expect(tasks.length).toBeGreaterThanOrEqual(2);
       expect(tasks.some((t) => t.id === task1.id)).toBe(true);
@@ -341,7 +347,11 @@ describe('TaskService', () => {
       });
 
       await expect(
-        taskService.updateTask(task.id, { title: 'Hacked' }, unauthorizedUser.id)
+        taskService.updateTask(
+          task.id,
+          { title: 'Hacked' },
+          unauthorizedUser.id
+        )
       ).rejects.toThrow('Unauthorized to update this task');
 
       // Clean up
@@ -442,4 +452,3 @@ describe('TaskService', () => {
     });
   });
 });
-

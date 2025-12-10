@@ -26,19 +26,24 @@ describe('getMe Error Path', () => {
 
     // Test error path by mocking res.json to throw
     const mockReq = {
-      user: { id: 'test-id', email: 'test@example.com' }
+      user: { id: 'test-id', email: 'test@example.com' },
     };
     const mockRes = {
-      json: jest.fn().mockImplementationOnce(() => {
-        throw new Error('JSON serialization failed');
-      }).mockImplementationOnce(() => {}),
-      status: jest.fn().mockReturnThis()
+      json: jest
+        .fn()
+        .mockImplementationOnce(() => {
+          throw new Error('JSON serialization failed');
+        })
+        .mockImplementationOnce(() => {}),
+      status: jest.fn().mockReturnThis(),
     };
 
     // This should trigger the catch block (lines 92-94)
     await authController.getMe(mockReq, mockRes);
 
     expect(mockRes.status).toHaveBeenCalledWith(500);
-    expect(mockRes.json).toHaveBeenCalledWith({ error: 'Internal server error' });
+    expect(mockRes.json).toHaveBeenCalledWith({
+      error: 'Internal server error',
+    });
   });
 });

@@ -15,7 +15,15 @@ class Task {
     this.updated_at = data.updated_at;
   }
 
-  static async create({ title, description, status, user_id, assigned_to, due_date, priority }) {
+  static async create({
+    title,
+    description,
+    status,
+    user_id,
+    assigned_to,
+    due_date,
+    priority,
+  }) {
     const query = `
       INSERT INTO tasks (title, description, status, user_id, assigned_to, due_date, priority)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -124,7 +132,14 @@ class Task {
   }
 
   async update(updates) {
-    const allowedFields = ['title', 'description', 'status', 'assigned_to', 'due_date', 'priority'];
+    const allowedFields = [
+      'title',
+      'description',
+      'status',
+      'assigned_to',
+      'due_date',
+      'priority',
+    ];
     const updateFields = [];
     const values = [];
     let paramCount = 1;
@@ -196,4 +211,3 @@ class Task {
 }
 
 module.exports = Task;
-

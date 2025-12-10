@@ -15,13 +15,23 @@ const createTaskValidator = [
     .withMessage('Title is required')
     .isLength({ min: 1, max: 255 })
     .withMessage('Title must be between 1 and 255 characters'),
-  body('description').optional().trim().isString().withMessage('Description must be a string'),
+  body('description')
+    .optional()
+    .trim()
+    .isString()
+    .withMessage('Description must be a string'),
   body('status')
     .optional()
     .isIn(['todo', 'in-progress', 'done'])
     .withMessage('Status must be one of: todo, in-progress, done'),
-  body('assigned_to').optional().isUUID().withMessage('Assigned to must be a valid UUID'),
-  body('due_date').optional().isISO8601().withMessage('Due date must be a valid ISO 8601 date'),
+  body('assigned_to')
+    .optional()
+    .isUUID()
+    .withMessage('Assigned to must be a valid UUID'),
+  body('due_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Due date must be a valid ISO 8601 date'),
   body('priority')
     .optional()
     .isIn(['low', 'medium', 'high'])
@@ -38,13 +48,23 @@ const updateTaskValidator = [
     .withMessage('Title cannot be empty')
     .isLength({ min: 1, max: 255 })
     .withMessage('Title must be between 1 and 255 characters'),
-  body('description').optional().trim().isString().withMessage('Description must be a string'),
+  body('description')
+    .optional()
+    .trim()
+    .isString()
+    .withMessage('Description must be a string'),
   body('status')
     .optional()
     .isIn(['todo', 'in-progress', 'done'])
     .withMessage('Status must be one of: todo, in-progress, done'),
-  body('assigned_to').optional().isUUID().withMessage('Assigned to must be a valid UUID'),
-  body('due_date').optional().isISO8601().withMessage('Due date must be a valid ISO 8601 date'),
+  body('assigned_to')
+    .optional()
+    .isUUID()
+    .withMessage('Assigned to must be a valid UUID'),
+  body('due_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Due date must be a valid ISO 8601 date'),
   body('priority')
     .optional()
     .isIn(['low', 'medium', 'high'])
@@ -62,7 +82,10 @@ const getTasksValidator = [
     .optional()
     .isIn(['todo', 'in-progress', 'done'])
     .withMessage('Status must be one of: todo, in-progress, done'),
-  query('assigned_to').optional().isUUID().withMessage('Assigned to must be a valid UUID'),
+  query('assigned_to')
+    .optional()
+    .isUUID()
+    .withMessage('Assigned to must be a valid UUID'),
   query('priority')
     .optional()
     .isIn(['low', 'medium', 'high'])
@@ -82,4 +105,3 @@ module.exports = {
   getTasksValidator,
   deleteTaskValidator,
 };
-

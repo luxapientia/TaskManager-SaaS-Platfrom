@@ -84,7 +84,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
               <select
                 id="status"
                 value={status}
-                onChange={(e) => setStatus(e.target.value as 'todo' | 'in-progress' | 'done')}
+                onChange={(e) =>
+                  setStatus(e.target.value as 'todo' | 'in-progress' | 'done')
+                }
                 disabled={loading}
               >
                 <option value="todo">Todo</option>
@@ -98,7 +100,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
               <select
                 id="priority"
                 value={priority}
-                onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
+                onChange={(e) =>
+                  setPriority(e.target.value as 'low' | 'medium' | 'high')
+                }
                 disabled={loading}
               >
                 <option value="low">Low</option>
@@ -120,10 +124,19 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
           </div>
 
           <div className="form-actions">
-            <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={loading}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onCancel}
+              disabled={loading}
+            >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
               {loading ? 'Saving...' : task ? 'Update Task' : 'Create Task'}
             </button>
           </div>
@@ -134,4 +147,3 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel }) => {
 };
 
 export default TaskForm;
-

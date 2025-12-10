@@ -10,7 +10,10 @@ const createTask = async (req, res) => {
     });
   } catch (error) {
     logger.error('Error creating task:', error);
-    if (error.message === 'User not found' || error.message === 'Assigned user not found') {
+    if (
+      error.message === 'User not found' ||
+      error.message === 'Assigned user not found'
+    ) {
       return res.status(404).json({ error: error.message });
     }
     res.status(500).json({ error: 'Internal server error' });
@@ -52,8 +55,13 @@ const getTask = async (req, res) => {
     });
   } catch (error) {
     logger.error('Error getting task:', error);
-    if (error.message === 'Task not found' || error.message === 'Unauthorized to access this task') {
-      return res.status(error.message === 'Task not found' ? 404 : 403).json({ error: error.message });
+    if (
+      error.message === 'Task not found' ||
+      error.message === 'Unauthorized to access this task'
+    ) {
+      return res
+        .status(error.message === 'Task not found' ? 404 : 403)
+        .json({ error: error.message });
     }
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -61,7 +69,11 @@ const getTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
   try {
-    const task = await taskService.updateTask(req.params.id, req.body, req.user.id);
+    const task = await taskService.updateTask(
+      req.params.id,
+      req.body,
+      req.user.id
+    );
     res.json({
       message: 'Task updated successfully',
       task: task.toJSON(),
@@ -74,9 +86,16 @@ const updateTask = async (req, res) => {
       error.message === 'Only task owner can assign tasks' ||
       error.message === 'Assigned user not found'
     ) {
-      return res.status(
-        error.message === 'Task not found' ? 404 : error.message.includes('Unauthorized') || error.message.includes('Only task owner') ? 403 : 404
-      ).json({ error: error.message });
+      return res
+        .status(
+          error.message === 'Task not found'
+            ? 404
+            : error.message.includes('Unauthorized') ||
+                error.message.includes('Only task owner')
+              ? 403
+              : 404
+        )
+        .json({ error: error.message });
     }
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -90,8 +109,13 @@ const deleteTask = async (req, res) => {
     });
   } catch (error) {
     logger.error('Error deleting task:', error);
-    if (error.message === 'Task not found' || error.message === 'Unauthorized to delete this task') {
-      return res.status(error.message === 'Task not found' ? 404 : 403).json({ error: error.message });
+    if (
+      error.message === 'Task not found' ||
+      error.message === 'Unauthorized to delete this task'
+    ) {
+      return res
+        .status(error.message === 'Task not found' ? 404 : 403)
+        .json({ error: error.message });
     }
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -104,4 +128,3 @@ module.exports = {
   updateTask,
   deleteTask,
 };
-
