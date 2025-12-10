@@ -126,6 +126,105 @@ describe('User Model', () => {
     });
   });
 
+  describe('update', () => {
+    test('should update user name', async () => {
+      const email = uniqueEmail('update');
+      const user = await User.create({
+        email,
+        password: 'Test1234',
+        name: 'Original Name',
+      });
+
+      const updatedUser = await user.update({ name: 'Updated Name' });
+
+      expect(updatedUser.name).toBe('Updated Name');
+      expect(updatedUser.email).toBe(email);
+      expect(updatedUser.id).toBe(user.id);
+    });
+
+    test('should update user email', async () => {
+      const email = uniqueEmail('updateemail');
+      const user = await User.create({
+        email,
+        password: 'Test1234',
+        name: 'Update Email User',
+      });
+
+      const newEmail = uniqueEmail('newemail');
+      const updatedUser = await user.update({ email: newEmail });
+
+      expect(updatedUser.email).toBe(newEmail);
+      expect(updatedUser.name).toBe(user.name);
+    });
+
+    test('should update both name and email', async () => {
+      const email = uniqueEmail('updateboth');
+      const user = await User.create({
+        email,
+        password: 'Test1234',
+        name: 'Original Name',
+      });
+
+      const newEmail = uniqueEmail('newboth');
+      const updatedUser = await user.update({
+        name: 'New Name',
+        email: newEmail,
+      });
+
+      expect(updatedUser.name).toBe('New Name');
+      expect(updatedUser.email).toBe(newEmail);
+    });
+
+    test('should return same user if no updates provided', async () => {
+      const email = uniqueEmail('noupdate');
+      const user = await User.create({
+        email,
+        password: 'Test1234',
+        name: 'No Update User',
+      });
+
+      const updatedUser = await user.update({});
+
+      expect(updatedUser).toBe(user);
+    });
+
+    test('should update updated_at timestamp', async () => {
+      const email = uniqueEmail('timestamp');
+      const user = await User.create({
+        email,
+        password: 'Test1234',
+        name: 'Timestamp User',
+      });
+
+      const originalUpdatedAt = user.updated_at;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      const updatedUser = await user.update({ name: 'Updated Name' });
+
+      expect(updatedUser.updated_at).not.toBe(originalUpdatedAt);
+    });
+
+    test('should throw error on database failure', async () => {
+      const email = uniqueEmail('dberror');
+      const user = await User.create({
+        email,
+        password: 'Test1234',
+        name: 'DB Error User',
+      });
+
+      const pool = require('../config/database');
+      const querySpy = jest
+        .spyOn(pool, 'query')
+        .mockRejectedValueOnce(new Error('Database connection failed'));
+
+      await expect(user.update({ name: 'Updated Name' })).rejects.toThrow(
+        'Database connection failed'
+      );
+
+      querySpy.mockRestore();
+    });
+  });
+
   describe('toJSON', () => {
     test('should return user data without password_hash', async () => {
       const email = uniqueEmail('json');

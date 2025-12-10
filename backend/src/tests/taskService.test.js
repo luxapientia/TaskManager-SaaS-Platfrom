@@ -72,6 +72,7 @@ describe('TaskService', () => {
         description: 'Test Description',
         status: 'todo',
         priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
       };
 
       const task = await taskService.createTask(taskData, testUser1.id);
@@ -88,6 +89,9 @@ describe('TaskService', () => {
       const taskData = {
         title: 'Assigned Task',
         description: 'Assigned Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         assigned_to: testUser2.id,
       };
 
@@ -103,6 +107,10 @@ describe('TaskService', () => {
     test('should throw error if assigned user does not exist', async () => {
       const taskData = {
         title: 'Invalid Task',
+        description: 'Invalid Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         assigned_to: randomUUID(),
       };
 
@@ -117,6 +125,9 @@ describe('TaskService', () => {
       const taskData = {
         title: 'Get Task Test',
         description: 'Test Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
       };
 
       const createdTask = await taskService.createTask(taskData, testUser1.id);
@@ -133,6 +144,10 @@ describe('TaskService', () => {
     test('should get a task by id for assigned user', async () => {
       const taskData = {
         title: 'Assigned Get Task',
+        description: 'Assigned Get Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
         assigned_to: testUser2.id,
       };
 
@@ -156,6 +171,10 @@ describe('TaskService', () => {
     test('should throw error if user is not authorized', async () => {
       const taskData = {
         title: 'Unauthorized Task',
+        description: 'Unauthorized Task Description',
+        status: 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 86400000).toISOString(),
       };
 
       const createdTask = await taskService.createTask(taskData, testUser1.id);
@@ -178,15 +197,34 @@ describe('TaskService', () => {
     test('should get all tasks for a user', async () => {
       // Create multiple tasks
       const task1 = await taskService.createTask(
-        { title: 'Task 1' },
+        {
+          title: 'Task 1',
+          description: 'Task 1 Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
       const task2 = await taskService.createTask(
-        { title: 'Task 2', status: 'in-progress' },
+        {
+          title: 'Task 2',
+          description: 'Task 2 Description',
+          status: 'in-progress',
+          priority: 'high',
+          due_date: new Date(Date.now() + 172800000).toISOString(),
+        },
         testUser1.id
       );
       const task3 = await taskService.createTask(
-        { title: 'Task 3', assigned_to: testUser1.id },
+        {
+          title: 'Task 3',
+          description: 'Task 3 Description',
+          status: 'todo',
+          priority: 'low',
+          due_date: new Date(Date.now() + 259200000).toISOString(),
+          assigned_to: testUser1.id,
+        },
         testUser2.id
       );
 
@@ -206,11 +244,23 @@ describe('TaskService', () => {
 
     test('should filter tasks by status', async () => {
       const task1 = await taskService.createTask(
-        { title: 'Todo Task', status: 'todo' },
+        {
+          title: 'Todo Task',
+          description: 'Todo Task Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
       const task2 = await taskService.createTask(
-        { title: 'Done Task', status: 'done' },
+        {
+          title: 'Done Task',
+          description: 'Done Task Description',
+          status: 'done',
+          priority: 'high',
+          due_date: new Date(Date.now() + 172800000).toISOString(),
+        },
         testUser1.id
       );
 
@@ -229,11 +279,23 @@ describe('TaskService', () => {
 
     test('should filter tasks by priority', async () => {
       const task1 = await taskService.createTask(
-        { title: 'High Priority', priority: 'high' },
+        {
+          title: 'High Priority',
+          description: 'High Priority Description',
+          status: 'todo',
+          priority: 'high',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
       const task2 = await taskService.createTask(
-        { title: 'Low Priority', priority: 'low' },
+        {
+          title: 'Low Priority',
+          description: 'Low Priority Description',
+          status: 'todo',
+          priority: 'low',
+          due_date: new Date(Date.now() + 172800000).toISOString(),
+        },
         testUser1.id
       );
 
@@ -252,15 +314,35 @@ describe('TaskService', () => {
 
     test('should filter tasks by assigned_to', async () => {
       const task1 = await taskService.createTask(
-        { title: 'Assigned Task 1', assigned_to: testUser2.id },
+        {
+          title: 'Assigned Task 1',
+          description: 'Assigned Task 1 Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+          assigned_to: testUser2.id,
+        },
         testUser1.id
       );
       const task2 = await taskService.createTask(
-        { title: 'Assigned Task 2', assigned_to: testUser2.id },
+        {
+          title: 'Assigned Task 2',
+          description: 'Assigned Task 2 Description',
+          status: 'in-progress',
+          priority: 'high',
+          due_date: new Date(Date.now() + 172800000).toISOString(),
+          assigned_to: testUser2.id,
+        },
         testUser1.id
       );
       const task3 = await taskService.createTask(
-        { title: 'Unassigned Task' },
+        {
+          title: 'Unassigned Task',
+          description: 'Unassigned Task Description',
+          status: 'todo',
+          priority: 'low',
+          due_date: new Date(Date.now() + 259200000).toISOString(),
+        },
         testUser1.id
       );
 
@@ -285,7 +367,13 @@ describe('TaskService', () => {
   describe('updateTask', () => {
     test('should update a task successfully', async () => {
       const task = await taskService.createTask(
-        { title: 'Original Title' },
+        {
+          title: 'Original Title',
+          description: 'Original Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
 
@@ -311,7 +399,14 @@ describe('TaskService', () => {
 
     test('should allow assigned user to update task', async () => {
       const task = await taskService.createTask(
-        { title: 'Assigned Task', assigned_to: testUser2.id },
+        {
+          title: 'Assigned Task',
+          description: 'Assigned Task Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+          assigned_to: testUser2.id,
+        },
         testUser1.id
       );
 
@@ -337,7 +432,13 @@ describe('TaskService', () => {
 
     test('should throw error if user is not authorized', async () => {
       const task = await taskService.createTask(
-        { title: 'Unauthorized Update' },
+        {
+          title: 'Unauthorized Update',
+          description: 'Unauthorized Update Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
       const unauthorizedUser = await User.create({
@@ -360,7 +461,14 @@ describe('TaskService', () => {
 
     test('should throw error if non-owner tries to assign task', async () => {
       const task = await taskService.createTask(
-        { title: 'Assignment Test', assigned_to: testUser2.id },
+        {
+          title: 'Assignment Test',
+          description: 'Assignment Test Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+          assigned_to: testUser2.id,
+        },
         testUser1.id
       );
 
@@ -378,7 +486,13 @@ describe('TaskService', () => {
 
     test('should successfully update assigned_to when user exists', async () => {
       const task = await taskService.createTask(
-        { title: 'Assignment Update Test' },
+        {
+          title: 'Assignment Update Test',
+          description: 'Assignment Update Test Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
 
@@ -396,7 +510,13 @@ describe('TaskService', () => {
 
     test('should throw error if assigned user does not exist', async () => {
       const task = await taskService.createTask(
-        { title: 'Invalid Assignment' },
+        {
+          title: 'Invalid Assignment',
+          description: 'Invalid Assignment Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
 
@@ -416,7 +536,13 @@ describe('TaskService', () => {
   describe('deleteTask', () => {
     test('should delete a task successfully', async () => {
       const task = await taskService.createTask(
-        { title: 'Delete Me' },
+        {
+          title: 'Delete Me',
+          description: 'Delete Me Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+        },
         testUser1.id
       );
 
@@ -439,7 +565,14 @@ describe('TaskService', () => {
 
     test('should throw error if user is not the owner', async () => {
       const task = await taskService.createTask(
-        { title: 'Unauthorized Delete', assigned_to: testUser2.id },
+        {
+          title: 'Unauthorized Delete',
+          description: 'Unauthorized Delete Description',
+          status: 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 86400000).toISOString(),
+          assigned_to: testUser2.id,
+        },
         testUser1.id
       );
 

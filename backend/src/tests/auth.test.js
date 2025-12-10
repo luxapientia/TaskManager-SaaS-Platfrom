@@ -1,5 +1,10 @@
 const request = require('supertest');
 const app = require('../index');
+const userService = require('../services/userService');
+const { randomUUID } = require('crypto');
+
+// Helper to generate unique email
+const uniqueEmail = (prefix) => `${prefix}-${randomUUID()}@example.com`;
 
 describe('Authentication API', () => {
   describe('POST /api/auth/register', () => {
@@ -292,6 +297,235 @@ describe('Authentication API', () => {
         .expect(200);
 
       expect(response.body).toHaveProperty('user');
+    });
+  });
+
+  describe('PUT /api/auth/profile', () => {
+    test('should update user profile name', async () => {
+      const email = uniqueEmail('updatename');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Original Name',
+        });
+
+      const token = registerResponse.body.token;
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'Updated Name' })
+        .expect(200);
+
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('Profile updated successfully');
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user.name).toBe('Updated Name');
+      expect(response.body.user.email).toBe(email);
+    });
+
+    test('should update user profile email', async () => {
+      const email = uniqueEmail('updateemail');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Update Email User',
+        });
+
+      const token = registerResponse.body.token;
+      const newEmail = uniqueEmail('newemail');
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ email: newEmail })
+        .expect(200);
+
+      expect(response.body).toHaveProperty('message');
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user.email).toBe(newEmail);
+    });
+
+    test('should update both name and email', async () => {
+      const email = uniqueEmail('updateboth');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Original Name',
+        });
+
+      const token = registerResponse.body.token;
+      const newEmail = uniqueEmail('newboth');
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'New Name', email: newEmail })
+        .expect(200);
+
+      expect(response.body).toHaveProperty('message');
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user.name).toBe('New Name');
+      expect(response.body.user.email).toBe(newEmail);
+    });
+
+    test('should reject request without authentication', async () => {
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .send({ name: 'Updated Name' })
+        .expect(401);
+
+      expect(response.body).toHaveProperty('error');
+    });
+
+    test('should reject invalid email format', async () => {
+      const email = uniqueEmail('invalidemail');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Invalid Email User',
+        });
+
+      const token = registerResponse.body.token;
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ email: 'invalid-email' })
+        .expect(400);
+
+      expect(response.body).toHaveProperty('errors');
+    });
+
+    test('should reject empty name', async () => {
+      const email = uniqueEmail('emptyname');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Empty Name User',
+        });
+
+      const token = registerResponse.body.token;
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: '' })
+        .expect(400);
+
+      expect(response.body).toHaveProperty('errors');
+    });
+
+    test('should reject name that is too short', async () => {
+      const email = uniqueEmail('shortname');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Short Name User',
+        });
+
+      const token = registerResponse.body.token;
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'A' })
+        .expect(400);
+
+      expect(response.body).toHaveProperty('errors');
+    });
+
+    test('should reject email already in use', async () => {
+      const email1 = uniqueEmail('existing');
+      const email2 = uniqueEmail('existing2');
+
+      const registerResponse1 = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: email1,
+          password: 'Test1234',
+          name: 'User 1',
+        });
+
+      await request(app).post('/api/auth/register').send({
+        email: email2,
+        password: 'Test1234',
+        name: 'User 2',
+      });
+
+      const token1 = registerResponse1.body.token;
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token1}`)
+        .send({ email: email2 })
+        .expect(400);
+
+      expect(response.body).toHaveProperty('error');
+      expect(response.body.error).toBe('Email already in use');
+    });
+
+    test('should allow updating to same email', async () => {
+      const email = uniqueEmail('sameemail');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Same Email User',
+        });
+
+      const token = registerResponse.body.token;
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ email: email, name: 'Updated Name' })
+        .expect(200);
+
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user.email).toBe(email);
+      expect(response.body.user.name).toBe('Updated Name');
+    });
+
+    test('should return 500 on unexpected error', async () => {
+      const email = uniqueEmail('error');
+      const registerResponse = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: 'Test1234',
+          name: 'Error User',
+        });
+
+      const token = registerResponse.body.token;
+
+      const updateProfileSpy = jest
+        .spyOn(userService, 'updateProfile')
+        .mockRejectedValue(new Error('Database connection failed'));
+
+      const response = await request(app)
+        .put('/api/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'Updated Name' })
+        .expect(500);
+
+      expect(response.body).toHaveProperty('error');
+      expect(response.body.error).toBe('Internal server error');
+
+      updateProfileSpy.mockRestore();
     });
   });
 });
