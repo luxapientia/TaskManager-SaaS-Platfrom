@@ -9,6 +9,7 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    continue-on-error: false
     
     services:
       postgres:
@@ -47,37 +48,41 @@ jobs:
             frontend/package-lock.json
             backend/package-lock.json
       
-      - name: Install frontend dependencies
+      - name: Install dependencies
+        env:
+          NODE_ENV: development
         run: |
-          cd frontend
-          npm ci
-      
-      - name: Install backend dependencies
-        run: |
-          cd backend
-          npm ci
+          set -e
+          echo "Environment: NODE_ENV=$NODE_ENV"
+          echo "Installing all workspace dependencies at root..."
+          npm install --no-audit --no-fund
+          echo "Verifying eslint installation:"
+          npm list eslint --workspace=frontend || echo "eslint not found in frontend workspace"
+          echo "Verifying eslint-config-react-app:"
+          npm list eslint-config-react-app --workspace=frontend || echo "eslint-config-react-app not found"
+          echo "Checking eslint binary in frontend:"
+          ls -la frontend/node_modules/.bin/eslint 2>&1 || echo "Not in frontend/node_modules"
+          ls -la node_modules/.bin/eslint 2>&1 || echo "Not in root node_modules"
+          echo "ESLint installation complete"
       
       - name: Lint frontend
-        run: |
-          cd frontend
-          npm run lint
+        working-directory: ./frontend
+        run: npm run lint
       
       - name: Lint backend
-        run: |
-          cd backend
-          npm run lint
+        working-directory: ./backend
+        run: npm run lint
       
       - name: Run frontend tests
-        run: |
-          cd frontend
-          npm test -- --coverage --watchAll=false
+        working-directory: ./frontend
+        run: npm test -- --coverage --watchAll=false
       
       - name: Run backend tests
+        working-directory: ./backend
         env:
           DATABASE_URL: postgresql://test:test123@localhost:5432/taskmanager_test
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test-secret
-        run: |
-          cd backend
-          npm test
+          JWT_REFRESH_SECRET: test-refresh-secret
+        run: npm test
 

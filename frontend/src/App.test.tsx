@@ -1,9 +1,22 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
+import * as api from './services/api';
 
-test('renders TaskManager heading', () => {
+jest.mock('./services/api', () => ({
+  authAPI: {
+    getMe: jest.fn(),
+  },
+}));
+
+test('renders app with routing', async () => {
+  (api.authAPI.getMe as jest.Mock).mockRejectedValue(
+    new Error('Not authenticated')
+  );
+
   render(<App />);
-  const headingElement = screen.getByText(/TaskManager SaaS/i);
-  expect(headingElement).toBeInTheDocument();
+
+  await waitFor(() => {
+    expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument();
+  });
 });

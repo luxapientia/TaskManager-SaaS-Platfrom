@@ -1,0 +1,165 @@
+.task-item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  border-left: 4px solid #ddd;
+}
+
+.task-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.task-item.status-todo {
+  border-left-color: #94a3b8;
+}
+
+.task-item.status-in-progress {
+  border-left-color: #3b82f6;
+}
+
+.task-item.status-done {
+  border-left-color: #10b981;
+  opacity: 0.9;
+}
+
+.task-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.task-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+.btn-danger {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-danger:hover {
+  background: #fecaca;
+}
+
+.task-description {
+  color: #64748b;
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 14px;
+}
+
+.task-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-status label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.status-select {
+  padding: 4px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.status-select.status-todo {
+  background-color: #f1f5f9;
+}
+
+.status-select.status-in-progress {
+  background-color: #dbeafe;
+}
+
+.status-select.status-done {
+  background-color: #d1fae5;
+}
+
+.task-priority {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priority-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.priority-value {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.priority-high {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.priority-medium {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.priority-low {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.task-due-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.due-date-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.due-date-value {
+  color: #475569;
+  font-weight: 500;
+}

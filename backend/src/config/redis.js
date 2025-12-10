@@ -13,7 +13,8 @@ client.on('connect', () => {
   logger.info('Connected to Redis');
 });
 
-if (!client.isOpen) {
+// Only auto-connect if not in test environment
+if (process.env.NODE_ENV !== 'test' && !client.isOpen) {
   client.connect().catch((err) => {
     logger.error('Failed to connect to Redis', err);
   });

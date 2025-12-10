@@ -14,6 +14,7 @@ const logger = winston.createLogger({
         winston.format.colorize(),
         winston.format.simple()
       ),
+      silent: process.env.NODE_ENV === 'test', // Suppress console output during tests
     }),
   ],
 });

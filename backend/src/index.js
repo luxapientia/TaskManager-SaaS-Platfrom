@@ -8,7 +8,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,9 +28,17 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       api: '/api',
+      auth: '/api/auth',
+      tasks: '/api/tasks',
     },
   });
 });
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
+const taskRoutes = require('./routes/taskRoutes');
+app.use('/api/tasks', taskRoutes);
 
 if (require.main === module) {
   app.listen(PORT, () => {
