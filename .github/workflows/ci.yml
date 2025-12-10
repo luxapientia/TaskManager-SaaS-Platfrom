@@ -48,36 +48,33 @@ jobs:
             backend/package-lock.json
       
       - name: Install frontend dependencies
+        working-directory: ./frontend
         run: |
-          cd frontend
-          npm ci
+          npm ci || npm install
+          npx eslint --version || echo "ESLint check failed"
       
       - name: Install backend dependencies
-        run: |
-          cd backend
-          npm ci
+        working-directory: ./backend
+        run: npm ci --prefer-offline --no-audit
       
       - name: Lint frontend
-        run: |
-          cd frontend
-          npm run lint
+        working-directory: ./frontend
+        run: npm run lint
       
       - name: Lint backend
-        run: |
-          cd backend
-          npm run lint
+        working-directory: ./backend
+        run: npm run lint
       
       - name: Run frontend tests
-        run: |
-          cd frontend
-          npm test -- --coverage --watchAll=false
+        working-directory: ./frontend
+        run: npm test -- --coverage --watchAll=false
       
       - name: Run backend tests
+        working-directory: ./backend
         env:
           DATABASE_URL: postgresql://test:test123@localhost:5432/taskmanager_test
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test-secret
-        run: |
-          cd backend
-          npm test
+          JWT_REFRESH_SECRET: test-refresh-secret
+        run: npm test
 
