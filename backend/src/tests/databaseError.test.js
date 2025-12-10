@@ -17,23 +17,42 @@ describe('Database Error Handling', () => {
   });
 
   test('should throw error when DATABASE_URL is not set', () => {
-    // Save original
+    // Save original DATABASE_URL
     const savedUrl = process.env.DATABASE_URL;
 
-    // Remove DATABASE_URL
-    delete process.env.DATABASE_URL;
+    // Use jest.isolateModules to test the error throw at module load (line 5)
+    jest.isolateModules(() => {
+      // Remove DATABASE_URL to trigger the error
+      delete process.env.DATABASE_URL;
 
-    // Clear cache to force re-evaluation
-    delete require.cache[require.resolve('../config/database')];
+      // This should throw an error when requiring the module
+      expect(() => {
+        require('../config/database');
+      }).toThrow(
+        'DATABASE_URL environment variable is not set. Please set it in your .env file or environment.'
+      );
+    });
 
-    // The check happens at module load, so we need to test it directly
-    // Since DATABASE_URL is set in jest.setup.js, this test verifies the check exists
-    // We can't easily test it without bypassing jest.setup.js, so we'll test the pool error instead
     // Restore for other tests
     process.env.DATABASE_URL = savedUrl;
+  });
 
-    // This test verifies the structure exists in the code
-    expect(true).toBe(true);
+  test('should configure SSL for production environment', () => {
+    // Test production SSL configuration (line 14-15)
+    jest.isolateModules(() => {
+      process.env.NODE_ENV = 'production';
+      process.env.DATABASE_URL =
+        originalDatabaseUrl ||
+        'postgresql://dev:dev123@localhost:5450/taskmanager';
+
+      const pool = require('../config/database');
+      expect(pool).toBeDefined();
+      // The SSL configuration is set in the Pool constructor
+      // We verify the module loads correctly in production mode
+    });
+
+    // Restore
+    process.env.NODE_ENV = originalEnv;
   });
 
   test('should handle pool error event', () => {

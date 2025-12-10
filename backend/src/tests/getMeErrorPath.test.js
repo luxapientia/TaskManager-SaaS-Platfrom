@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../index');
+const authController = require('../controllers/authController');
 
 describe('getMe Error Path', () => {
   test('should handle error in getMe catch block', async () => {
@@ -15,10 +16,6 @@ describe('getMe Error Path', () => {
 
     const token = registerResponse.body.token;
 
-    // The error path in getMe (lines 89-90) is defensive code
-    // that's hard to trigger naturally. res.json() is unlikely to throw.
-    // However, we can verify the structure exists.
-
     // Test normal operation
     const response = await request(app)
       .get('/api/auth/me')
@@ -27,8 +24,21 @@ describe('getMe Error Path', () => {
 
     expect(response.body).toHaveProperty('user');
 
-    // To actually test the error path, we would need to mock res.json to throw,
-    // but that requires more complex setup. The error handler is defensive code
-    // that protects against unexpected errors.
+    // Test error path by mocking res.json to throw
+    const mockReq = {
+      user: { id: 'test-id', email: 'test@example.com' }
+    };
+    const mockRes = {
+      json: jest.fn().mockImplementationOnce(() => {
+        throw new Error('JSON serialization failed');
+      }).mockImplementationOnce(() => {}),
+      status: jest.fn().mockReturnThis()
+    };
+
+    // This should trigger the catch block (lines 92-94)
+    await authController.getMe(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({ error: 'Internal server error' });
   });
 });
