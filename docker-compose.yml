@@ -43,6 +43,7 @@ services:
       DATABASE_URL: postgresql://dev:dev123@postgres:5432/taskmanager
       REDIS_URL: redis://redis:6379
       JWT_SECRET: dev-secret-key-change-in-production
+      JWT_REFRESH_SECRET: dev-refresh-secret-key-change-in-production
     volumes:
       - ./backend:/app
       - /app/node_modules
