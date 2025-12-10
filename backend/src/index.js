@@ -29,12 +29,16 @@ app.get('/api', (req, res) => {
       health: '/health',
       api: '/api',
       auth: '/api/auth',
+      tasks: '/api/tasks',
     },
   });
 });
 
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
+
+const taskRoutes = require('./routes/taskRoutes');
+app.use('/api/tasks', taskRoutes);
 
 if (require.main === module) {
   app.listen(PORT, () => {
