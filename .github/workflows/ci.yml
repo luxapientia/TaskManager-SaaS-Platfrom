@@ -9,6 +9,7 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    continue-on-error: false
     
     services:
       postgres:
@@ -53,8 +54,13 @@ jobs:
           NODE_ENV: development
         run: |
           npm install --no-audit --no-fund
-          npm list eslint || npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
-          ./node_modules/.bin/eslint --version || npx eslint --version
+          # Ensure eslint is installed
+          if ! command -v ./node_modules/.bin/eslint &> /dev/null; then
+            echo "ESLint not found, installing..."
+            npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
+          fi
+          # Verify eslint works
+          ./node_modules/.bin/eslint --version
       
       - name: Install backend dependencies
         working-directory: ./backend
