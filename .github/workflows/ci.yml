@@ -49,15 +49,12 @@ jobs:
       
       - name: Install frontend dependencies
         working-directory: ./frontend
+        env:
+          NODE_ENV: development
         run: |
-          npm install
-          # Verify eslint is installed, install if missing
-          if [ ! -f node_modules/.bin/eslint ]; then
-            echo "ESLint not found, installing..."
-            npm install eslint@^8.54.0 --save-dev
-          fi
-          # Verify installation
-          ./node_modules/.bin/eslint --version
+          npm install --no-audit --no-fund
+          npm list eslint || npm install eslint@^8.54.0 --save-dev --no-audit --no-fund
+          ./node_modules/.bin/eslint --version || npx eslint --version
       
       - name: Install backend dependencies
         working-directory: ./backend
