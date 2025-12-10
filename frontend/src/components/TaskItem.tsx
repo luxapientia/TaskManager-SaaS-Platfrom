@@ -75,8 +75,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
       <div className="task-meta">
         <div className="task-status">
-          <label>Status:</label>
+          <label htmlFor={`status-select-${task.id}`}>Status:</label>
           <select
+            id={`status-select-${task.id}`}
             value={task.status}
             onChange={(e) =>
               onStatusChange(e.target.value as 'todo' | 'in-progress' | 'done')
