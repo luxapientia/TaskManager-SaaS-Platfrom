@@ -227,7 +227,9 @@ describe('TaskList', () => {
       target: { value: 'Updated Task' },
     });
     // Ensure due_date is filled (it's required)
-    const dueDateInput = screen.getByLabelText('Due Date *') as HTMLInputElement;
+    const dueDateInput = screen.getByLabelText(
+      'Due Date *'
+    ) as HTMLInputElement;
     if (!dueDateInput.value) {
       fireEvent.change(dueDateInput, {
         target: { value: '2024-12-31' },
