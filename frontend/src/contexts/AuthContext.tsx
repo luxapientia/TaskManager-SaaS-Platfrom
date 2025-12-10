@@ -86,9 +86,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const updateProfile = async (
-    data: { name?: string; email?: string }
-  ): Promise<void> => {
+  const updateProfile = async (data: {
+    name?: string;
+    email?: string;
+  }): Promise<void> => {
     try {
       const response = await authAPI.updateProfile(data);
       setUser(response.user);

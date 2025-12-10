@@ -45,4 +45,3 @@ module.exports = {
   verifyToken,
   verifyRefreshToken,
 };
-

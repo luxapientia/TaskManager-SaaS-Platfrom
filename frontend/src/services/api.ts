@@ -170,9 +170,10 @@ export const authAPI = {
     return response.data;
   },
 
-  updateProfile: async (
-    data: { name?: string; email?: string }
-  ): Promise<{ message: string; user: User }> => {
+  updateProfile: async (data: {
+    name?: string;
+    email?: string;
+  }): Promise<{ message: string; user: User }> => {
     const response = await api.put<{ message: string; user: User }>(
       '/api/auth/profile',
       data
